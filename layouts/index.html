@@ -25,7 +25,7 @@
       <h2 class="section-title"><span>关于作者</span></h2>
       <div class="about-content">
         <div class="author-image">
-          <img src="/images/author.jpg" alt="作者照片">
+          <img src="/images/author.png" alt="作者照片">
         </div>
         <div class="author-info">
           <h3>{{ .Site.Title }}</h3>
@@ -55,7 +55,7 @@
               <li data-chapter="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="{{ if eq $i 0 }}active{{ end }}">
                 <div class="chapter-nav-item">
                   <div class="thumb">
-                    <img src="{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.jpg{{ end }}" alt="{{ $chap.Title }}">
+                    <img src="{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.png{{ end }}" alt="{{ $chap.Title }}">
                     <span class="chapter-number">{{ add $i 1 }}</span>
                   </div>
                   <div class="chapter-meta">
