@@ -113,13 +113,9 @@
   <!-- 调试信息容器 -->
   <div id="debug-info" class="debug-info">
     <h3>调试信息</h3>
-    <div id="identity-status">Netlify Identity: 加载中...</div>
     <div id="cms-status">Netlify CMS: 加载中...</div>
     <div id="error-log"></div>
   </div>
-
-  <!-- 添加 Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   
   <!-- 添加 Netlify CMS -->
   <script src="https://unpkg.com/netlify-cms@^2.10.192/dist/netlify-cms.js"></script>
@@ -165,9 +161,6 @@
     
     // 等待DOM加载完成
     document.addEventListener('DOMContentLoaded', function() {
-      // 检查Netlify Identity是否加载
-      const identityLoaded = checkScriptLoaded('Netlify Identity', window.netlifyIdentity);
-      
       // 检查CMS是否加载
       const cmsLoaded = checkScriptLoaded('Netlify CMS', window.CMS);
       
@@ -206,26 +199,6 @@
       
       // 每500毫秒检查一次文本编辑器
       const editorInterval = setInterval(enhanceTextEditor, 500);
-      
-      // Netlify Identity配置
-      if (identityLoaded) {
-        try {
-          window.netlifyIdentity.on("init", user => {
-            logDebug("Netlify Identity 初始化成功");
-            if (!user) {
-              logDebug("未检测到登录用户");
-              window.netlifyIdentity.on("login", () => {
-                logDebug("用户登录成功，准备跳转");
-                document.location.href = "/admin/";
-              });
-            } else {
-              logDebug("检测到用户: " + user.email);
-            }
-          });
-        } catch (e) {
-          logDebug("Netlify Identity 错误: " + e.message, true);
-        }
-      }
       
       // CMS配置
       if (cmsLoaded) {
@@ -285,11 +258,12 @@
             }
           });
           
-          // 初始化CMS - 使用内联配置
+          // 初始化CMS - 使用config.yml配置
           CMS.init({
             config: {
               backend: {
-                name: "git-gateway",
+                name: "github",
+                repo: "用户名/my-autobiography",
                 branch: "main"
               },
               local_backend: {
