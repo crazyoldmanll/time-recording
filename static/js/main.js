@@ -36,7 +36,33 @@ document.addEventListener('DOMContentLoaded', function() {
       if (chaptersSection) {
         chaptersSection.scrollIntoView({ behavior: 'smooth' });
       }
+      
+      // 重新加载评论组件
+      reloadUtterances(activeChapter);
     }
+  }
+
+  // 重新加载Utterances评论组件
+  function reloadUtterances(container) {
+    // 查找评论容器
+    const commentsContainer = container.querySelector('#utterances-container');
+    if (!commentsContainer) return;
+    
+    // 清空现有内容
+    commentsContainer.innerHTML = '';
+    
+    // 创建新的script元素
+    const script = document.createElement('script');
+    script.src = 'https://utteranc.es/client.js';
+    script.setAttribute('repo', 'crazyoldmanll/time-recording');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('label', '评论');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    
+    // 添加到容器
+    commentsContainer.appendChild(script);
   }
 
   // 为章节导航添加点击事件
