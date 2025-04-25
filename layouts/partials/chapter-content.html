@@ -1,5 +1,8 @@
 <article id="{{ .chap.Params.id }}" class="chapter-content"{{ if not .first }} hidden{{ end }}>
   <h2>{{ .chap.Title }}</h2>
   {{ .chap.Content }}
+  
+  <!-- 添加评论区 -->
+  {{ partial "comments.html" . }}
 </article>
 

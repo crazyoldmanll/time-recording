@@ -1051,3 +1051,46 @@ section {
   }
 }
 
+/* ---------- 评论区样式 ---------- */
+.comments-section {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.comments-section h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.comments-notice {
+  margin-bottom: 2rem;
+  color: var(--lightest-text);
+  font-style: italic;
+}
+
+.comments-help {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--lightest-text);
+  text-align: center;
+}
+
+.utterances {
+  max-width: 100% !important;
+  margin-top: 2rem;
+}
+
+/* 适配移动端 */
+@media (max-width: 768px) {
+  .comments-section {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+  }
+  
+  .comments-section h3 {
+    font-size: 1.3rem;
+  }
+}
+
