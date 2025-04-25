@@ -1,12 +1,38 @@
 <footer class="site-footer">
   <div class="container">
-    <p>© 2025 你的名字 — 版权所有</p>
-    <div class="social">
-      <a href="#">WeChat</a>
-      <a href="#">微博</a>
-      <a href="#">Instagram</a>
-      <a href="mailto:you@example.com">Email</a>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <h2>{{ .Site.Title }}</h2>
+        <p>记录生活，分享故事</p>
+      </div>
+      <div class="footer-nav">
+        <h3>快速导航</h3>
+        <ul>
+          <li><a href="#about">关于作者</a></li>
+          <li><a href="#chapters">章节目录</a></li>
+          <li><a href="#gallery">故事相册</a></li>
+          <li><a href="#contact">联系方式</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>社交媒体</h3>
+        <div class="social-icons">
+          <a href="#" title="微信"><i class="fab fa-weixin"></i></a>
+          <a href="#" title="微博"><i class="fab fa-weibo"></i></a>
+          <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" title="电子邮件"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. 保留所有权利.</p>
     </div>
   </div>
 </footer>
+
+<div class="reading-progress">
+  <div class="progress-bar"></div>
+</div>
+
+<button id="back-to-top" title="返回顶部"><i class="fas fa-arrow-up"></i></button>
 

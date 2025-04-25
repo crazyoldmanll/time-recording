@@ -21,6 +21,78 @@
       line-height: 1.6 !important;
     }
     
+    /* 文本编辑器增强 */
+    .widget-text textarea {
+      min-height: 400px !important;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif !important;
+      font-size: 16px !important;
+      line-height: 1.6 !important;
+      padding: 12px !important;
+      color: #333 !important;
+      background-color: #fff !important;
+    }
+    
+    /* 让输入文本更加清晰可见 */
+    .widget-text textarea:focus {
+      border-color: #3a69c7 !important;
+      box-shadow: 0 0 0 3px rgba(58, 105, 199, 0.1) !important;
+      outline: none !important;
+    }
+    
+    /* 富文本编辑器增强 */
+    .richTextEditor {
+      min-height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    
+    .richTextEditor:focus {
+      outline: none;
+      border-color: #3a69c7;
+      box-shadow: 0 0 0 3px rgba(58, 105, 199, 0.1);
+    }
+    
+    /* 图文编辑工具栏 */
+    .rich-text-toolbar {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #f8f8f8;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+    
+    .rich-text-toolbar button {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+    }
+    
+    .rich-text-toolbar button:hover {
+      background: #f0f0f0;
+    }
+    
+    .rich-text-toolbar button i {
+      margin-right: 4px;
+    }
+    
+    .rich-text-toolbar .separator {
+      width: 1px;
+      height: 24px;
+      background: #ddd;
+      margin: 0 4px;
+    }
+    
     .debug-info {
       position: fixed;
       bottom: 10px;
@@ -54,6 +126,10 @@
   
   <!-- 添加中文语言包 -->
   <script src="https://unpkg.com/netlify-cms-locales@1.39.0/dist/zh_Hans.js"></script>
+  
+  <!-- 添加 Markdown-it 和扩展插件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.1/turndown.min.js"></script>
   
   <!-- 添加中文输入增强 -->
   <script src="/admin/chinese.js"></script>
@@ -95,6 +171,42 @@
       // 检查CMS是否加载
       const cmsLoaded = checkScriptLoaded('Netlify CMS', window.CMS);
       
+      // 添加直接增强文本编辑器的逻辑
+      function enhanceTextEditor() {
+        // 获取所有文本编辑器
+        const textareas = document.querySelectorAll('.widget-text textarea, textarea[name="body"]');
+        textareas.forEach(textarea => {
+          if (!textarea.getAttribute('data-enhanced')) {
+            textarea.setAttribute('data-enhanced', 'true');
+            textarea.style.minHeight = '400px';
+            textarea.style.fontFamily = '"PingFang SC", "Microsoft YaHei", sans-serif';
+            textarea.style.fontSize = '16px';
+            textarea.style.lineHeight = '1.6';
+            textarea.style.padding = '12px';
+            textarea.style.color = '#333';
+            textarea.style.backgroundColor = '#fff';
+            
+            // 添加输入事件监听器
+            textarea.addEventListener('compositionstart', function() {
+              this.setAttribute('data-composing', 'true');
+              logDebug('中文输入开始');
+            });
+            
+            textarea.addEventListener('compositionend', function() {
+              this.removeAttribute('data-composing');
+              const event = new Event('input', { bubbles: true });
+              this.dispatchEvent(event);
+              logDebug('中文输入结束，触发更新');
+            });
+            
+            logDebug('文本编辑器增强完成');
+          }
+        });
+      }
+      
+      // 每500毫秒检查一次文本编辑器
+      const editorInterval = setInterval(enhanceTextEditor, 500);
+      
       // Netlify Identity配置
       if (identityLoaded) {
         try {
@@ -126,6 +238,36 @@
             logDebug("中文语言包未加载", true);
           }
           
+          // 注册预览组件
+          CMS.registerPreviewStyle("/css/style.css");
+          
+          // 创建增强的编辑预览
+          const MarkdownPreview = createClass({
+            render: function() {
+              const {entry, widgetFor} = this.props;
+              const md = new markdownit({
+                html: true,
+                linkify: true,
+                typographer: true
+              });
+              
+              const title = entry.getIn(['data', 'title']);
+              const body = entry.getIn(['data', 'body']);
+              const date = entry.getIn(['data', 'date']);
+              
+              return h('div', {className: 'content-preview'},
+                h('h1', {}, title),
+                h('div', {className: 'date'}, date && new Date(date).toLocaleDateString('zh-CN')),
+                h('div', {
+                  className: 'content',
+                  dangerouslySetInnerHTML: {__html: md.render(body || '')}
+                })
+              );
+            }
+          });
+          
+          CMS.registerPreviewTemplate('chapters', MarkdownPreview);
+          
           // 重置编辑器配置，启用中文支持
           CMS.registerEditorComponent({
             id: "reset-editor",
@@ -154,7 +296,15 @@
                 url: "http://localhost:8081/api/v1"
               },
               load_config_file: true,
-              locale: 'zh_Hans'
+              locale: 'zh_Hans',
+              editor: {
+                preview: true
+              },
+              markdown: {
+                default_mode: 'rich_text',
+                frontmatter_delimiter: ['---', '---'],
+                show_raw: true
+              }
             }
           });
           
@@ -167,6 +317,41 @@
               editor.setAttribute('lang', 'zh-CN');
               editor.style.fontFamily = '"PingFang SC", "Microsoft YaHei", sans-serif';
               logDebug("找到并增强编辑器元素");
+            });
+            
+            // 添加富文本工具栏增强
+            const editorContainers = document.querySelectorAll('.nc-entryEditor-entryContent');
+            editorContainers.forEach(container => {
+              const toolbar = document.createElement('div');
+              toolbar.className = 'rich-text-toolbar';
+              toolbar.innerHTML = `
+                <button title="插入图片" data-action="image"><i class="fas fa-image"></i> 图片</button>
+                <button title="插入表格" data-action="table"><i class="fas fa-table"></i> 表格</button>
+                <div class="separator"></div>
+                <button title="粗体" data-action="bold"><i class="fas fa-bold"></i> 粗体</button>
+                <button title="斜体" data-action="italic"><i class="fas fa-italic"></i> 斜体</button>
+                <button title="引用" data-action="quote"><i class="fas fa-quote-left"></i> 引用</button>
+                <div class="separator"></div>
+                <button title="有序列表" data-action="ordered-list"><i class="fas fa-list-ol"></i> 有序列表</button>
+                <button title="无序列表" data-action="unordered-list"><i class="fas fa-list-ul"></i> 无序列表</button>
+              `;
+              
+              // 如果容器中存在编辑器，则添加工具栏
+              const editorArea = container.querySelector('.css-wcxeq8-WidgetControlNotSelected, .cm-s-easymde');
+              if (editorArea && !container.querySelector('.rich-text-toolbar')) {
+                container.insertBefore(toolbar, editorArea);
+                
+                // 添加工具栏按钮点击事件
+                toolbar.querySelectorAll('button').forEach(button => {
+                  button.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    // 在这里处理各种编辑器操作
+                    logDebug(`执行编辑器操作: ${action}`);
+                    
+                    // TODO: 实现对应的编辑器操作
+                  });
+                });
+              }
             });
           }, 2000);
           

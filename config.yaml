@@ -1,7 +1,6 @@
-baseURL: "https://crazyoldmanll.github.io/my-autobiography/"  # 使用你的实际GitHub用户名
+baseURL: "/"  # 修改为根路径
 languageCode: "zh-CN"
 title: "我的自传体"
-theme: ""
 # 开启章节 collection
 module:
   mounts:
@@ -10,7 +9,7 @@ module:
 outputs:
   home: ["HTML", "RSS"]
 # 关闭 taxonomy（用不到）
-disableKinds: ["taxonomy"]
+disableKinds: ["taxonomy", "term"]
 # 让 Hugo 处理 .yaml 数据
 dataDir: data
 

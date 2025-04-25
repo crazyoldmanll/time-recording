@@ -1,71 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的自传体</title>
+  <title>{{ .Site.Title }} - 个人自传体小说</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
-      <div class="logo">我的自传体</div>
+      <div class="logo"><a href="/">{{ .Site.Title }}</a></div>
       <nav class="main-nav">
-        <a href="#about">关于</a>
-        <a href="#works">作品集</a>
-        <a href="#gallery">相册</a>
-        <a href="#timeline">旅程</a>
-        <a href="#contact">联系</a>
+        <a href="#about"><i class="fas fa-user"></i> 关于</a>
+        <a href="#chapters"><i class="fas fa-book-open"></i> 章节</a>
+        <a href="#contact"><i class="fas fa-envelope"></i> 联系</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero" id="hero">
-    {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
-    {{ range $i, $chap := $chapters }}
-    <div class="slide{{ if eq $i 0 }} active{{ end }}" style="background-image:url('{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.jpg{{ end }}')">
-      <h1>{{ $chap.Title }}</h1>
-      <a href="#chapters" class="cta-button">开始阅读</a>
+  <section class="about-section" id="about">
+    <div class="container">
+      <h2 class="section-title"><span>关于作者</span></h2>
+      <div class="about-content">
+        <div class="author-image">
+          <img src="/images/author.jpg" alt="作者照片">
+        </div>
+        <div class="author-info">
+          <h3>{{ .Site.Title }}</h3>
+          <p>欢迎来到我的自传体小说世界。这是一个融合了真实经历与虚构故事的空间，记录了我人生旅途中的点滴记忆与感悟。</p>
+          <p>每一章节都是一段独特的旅程，每一个故事都承载着特别的情感。希望我的文字能够引起你的共鸣，带给你些许感动与思考。</p>
+          <div class="social-links">
+            <a href="#" title="微信"><i class="fab fa-weixin"></i></a>
+            <a href="#" title="微博"><i class="fab fa-weibo"></i></a>
+            <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" title="电子邮件"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
     </div>
-    {{ end }}
   </section>
 
-  <main class="container" id="chapters">
-    <div class="content-layout">
-      <aside class="chapter-nav">
-        <h2>章节导航</h2>
-        <ul>
-          {{ range $i, $chap := $chapters }}
-          <li data-chapter="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="{{ if eq $i 0 }}active{{ end }}">
-            <div class="thumb">
-              <img src="{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.jpg{{ end }}" alt="{{ $chap.Title }}">
-            </div>
-            <span>{{ $chap.Title }}</span>
-          </li>
-          {{ end }}
-        </ul>
-      </aside>
-
-      <section class="content-area">
-        {{ range $i, $chap := $chapters }}
-        <article id="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="chapter-content{{ if eq $i 0 }} visible{{ end }}">
-          <h2>{{ $chap.Title }}</h2>
-          <div class="chapter-body">
-            {{ $chap.Content }}
+  <main class="chapters-section" id="chapters">
+    <div class="container">
+      <h2 class="section-title"><span>章节目录</span></h2>
+      <div class="content-layout">
+        <aside class="chapter-nav">
+          <div class="nav-container">
+            <h3>目录导航</h3>
+            <ul>
+              {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
+              {{ range $i, $chap := $chapters }}
+              <li data-chapter="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="{{ if eq $i 0 }}active{{ end }}">
+                <div class="chapter-nav-item">
+                  <div class="thumb">
+                    <img src="{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.jpg{{ end }}" alt="{{ $chap.Title }}">
+                    <span class="chapter-number">{{ add $i 1 }}</span>
+                  </div>
+                  <div class="chapter-meta">
+                    <span class="chapter-title">{{ $chap.Title }}</span>
+                    <span class="chapter-date">{{ $chap.Date.Format "2006-01-02" }}</span>
+                  </div>
+                </div>
+              </li>
+              {{ end }}
+            </ul>
           </div>
-        </article>
-        {{ end }}
-      </section>
+        </aside>
+
+        <section class="content-area">
+          {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
+          {{ range $i, $chap := $chapters }}
+          <article id="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="chapter-content{{ if eq $i 0 }} visible{{ end }}">
+            <div class="chapter-header">
+              <h2>{{ $chap.Title }}</h2>
+              <div class="chapter-meta">
+                <span class="date"><i class="far fa-calendar-alt"></i> {{ $chap.Date.Format "2006-01-02" }}</span>
+                <span class="reading-time"><i class="far fa-clock"></i> {{ div (countwords $chap.Content) 200 }}分钟阅读</span>
+              </div>
+            </div>
+            <div class="chapter-body">
+              {{ $chap.Content }}
+            </div>
+            <div class="chapter-footer">
+              <div class="chapter-navigation">
+                {{ if gt $i 0 }}
+                {{ $prev := index $chapters (sub $i 1) }}
+                <a href="#{{ with $prev.Params.id }}{{ . }}{{ else }}{{ $prev.File.BaseFileName }}{{ end }}" class="prev-chapter" data-chapter="{{ with $prev.Params.id }}{{ . }}{{ else }}{{ $prev.File.BaseFileName }}{{ end }}">
+                  <i class="fas fa-arrow-left"></i> 上一章：{{ $prev.Title }}
+                </a>
+                {{ end }}
+                
+                {{ if lt $i (sub (len $chapters) 1) }}
+                {{ $next := index $chapters (add $i 1) }}
+                <a href="#{{ with $next.Params.id }}{{ . }}{{ else }}{{ $next.File.BaseFileName }}{{ end }}" class="next-chapter" data-chapter="{{ with $next.Params.id }}{{ . }}{{ else }}{{ $next.File.BaseFileName }}{{ end }}">
+                  下一章：{{ $next.Title }} <i class="fas fa-arrow-right"></i>
+                </a>
+                {{ end }}
+              </div>
+            </div>
+          </article>
+          {{ end }}
+        </section>
+      </div>
     </div>
   </main>
 
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title"><span>联系我</span></h2>
+      <div class="contact-content">
+        <div class="contact-info">
+          <h3>让我们保持联系</h3>
+          <p>无论是对故事的感想、建议，还是合作意向，都欢迎与我交流。</p>
+          <ul class="contact-list">
+            <li><i class="fas fa-envelope"></i> <a href="mailto:example@domain.com">example@domain.com</a></li>
+            <li><i class="fab fa-weixin"></i> <span>微信号：yourwechat</span></li>
+            <li><i class="fab fa-weibo"></i> <a href="https://weibo.com/u/yourweibo">@你的微博</a></li>
+          </ul>
+        </div>
+        <div class="contact-form">
+          <form id="contact-form" name="contact" method="POST" data-netlify="true">
+            <input type="hidden" name="form-name" value="contact">
+            <div class="form-group">
+              <label for="name">您的姓名</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">电子邮箱</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="message">留言内容</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">发送留言</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; 2025 我的自传体. 保留所有权利.</p>
+      <div class="footer-content">
+        <div class="footer-logo">
+          <h2>{{ .Site.Title }}</h2>
+          <p>记录生活，分享故事</p>
+        </div>
+        <div class="footer-nav">
+          <h3>快速导航</h3>
+          <ul>
+            <li><a href="#about">关于作者</a></li>
+            <li><a href="#chapters">章节目录</a></li>
+            <li><a href="#contact">联系方式</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>社交媒体</h3>
+          <div class="social-icons">
+            <a href="#" title="微信"><i class="fab fa-weixin"></i></a>
+            <a href="#" title="微博"><i class="fab fa-weibo"></i></a>
+            <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" title="电子邮件"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. 保留所有权利.</p>
+      </div>
     </div>
   </footer>
 
+  <div class="reading-progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <button id="back-to-top" title="返回顶部"><i class="fas fa-arrow-up"></i></button>
+
   <script src="/js/main.js"></script>
+  <script>
+    // 确保点击标题能返回主页
+    document.addEventListener('DOMContentLoaded', function() {
+      const siteTitle = document.querySelector('.logo a');
+      if (siteTitle) {
+        siteTitle.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 

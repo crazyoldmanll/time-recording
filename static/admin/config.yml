@@ -32,7 +32,10 @@ markdown:
   default_mode: 'rich_text'
   frontmatter_delimiter: ['---', '---']
   show_raw: true
-  editor_components: []
+  editor_components: ['image', 'code-block', 'quote', 'bulleted-list', 'numbered-list', 'table']
+  toolbar_buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 
+                 'heading-three', 'heading-four', 'heading-five', 'heading-six',
+                 'quote', 'bulleted-list', 'numbered-list']
 
 # slug配置
 slug:
@@ -61,7 +64,8 @@ collections:
           label: "正文", 
           name: "body", 
           widget: "text",
-          default: "这里可以输入文章内容..."
+          default: "这里可以输入文章内容...",
+          hint: "支持图文混排，可以粘贴保留格式的文本"
         }
 
   - name: "settings"
