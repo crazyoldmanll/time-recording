@@ -1,0 +1,21 @@
+{
+  "name": "my-autobiography",
+  "version": "1.0.0",
+  "description": "个人自传体网站",
+  "main": "index.js",
+  "scripts": {
+    "dev": "hugo server -D",
+    "build": "hugo",
+    "clean": "rm -rf public",
+    "cms": "npx netlify-cms-proxy-server"
+  },
+  "dependencies": {
+    "netlify-cms-app": "^2.15.72"
+  },
+  "devDependencies": {
+    "netlify-cms-proxy-server": "^1.3.24"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
