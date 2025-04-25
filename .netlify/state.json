@@ -1,0 +1,20 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Wroclaw",
+			"country": {
+				"code": "PL",
+				"name": "Poland"
+			},
+			"subdivision": {
+				"code": "02",
+				"name": "Lower Silesia"
+			},
+			"timezone": "Europe/Warsaw",
+			"latitude": 51.1005,
+			"longitude": 17.0324,
+			"postalCode": "50-019"
+		},
+		"timestamp": 1745543968816
+	}
+}

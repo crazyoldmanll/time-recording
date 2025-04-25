@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>简易管理后台</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    #debug {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #000;
+      color: #fff;
+      padding: 10px;
+      height: 200px;
+      overflow: auto;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div id="debug"></div>
+  <script>
+    // 简单调试日志
+    function log(msg) {
+      const debug = document.getElementById('debug');
+      debug.innerHTML += `<div>${msg}</div>`;
+      console.log(msg);
+    }
+    
+    // 检测脚本加载情况
+    log('身份验证模块: ' + (window.netlifyIdentity ? '已加载' : '未加载'));
+    log('CMS模块: ' + (window.CMS ? '已加载' : '未加载'));
+    
+    if (window.CMS) {
+      log('初始化CMS...');
+      try {
+        // 使用内联配置避免加载config.yml
+        CMS.init({
+          config: {
+            backend: {
+              name: "test-repo" // 测试模式，不需要身份验证
+            },
+            media_folder: "static/images/chapter-thumbs",
+            public_folder: "/images/chapter-thumbs",
+            collections: [
+              {
+                name: "chapters",
+                label: "章节",
+                folder: "content/chapters",
+                create: true,
+                fields: [
+                  { label: "标题", name: "title", widget: "string" },
+                  { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD" },
+                  { label: "缩略图", name: "thumb", widget: "image", required: false },
+                  { label: "正文", name: "body", widget: "markdown" }
+                ]
+              }
+            ]
+          }
+        });
+        log('CMS初始化完成');
+      } catch (e) {
+        log('CMS初始化错误: ' + e.message);
+      }
+    }
+    
+    // 检查页面是否能正常显示
+    document.addEventListener('DOMContentLoaded', function() {
+      log('DOM加载完成');
+      setTimeout(function() {
+        if (document.querySelector('.css-1bnhwy5')) {
+          log('CMS界面已渲染');
+        } else {
+          log('警告: CMS界面未渲染，检查DOM元素');
+          document.querySelectorAll('body > *').forEach(function(el) {
+            if (el.id !== 'debug') {
+              log('发现元素: ' + el.tagName + ' - ' + (el.id || '无ID'));
+            }
+          });
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html> 

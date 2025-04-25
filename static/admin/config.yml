@@ -1,0 +1,81 @@
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: '创建 {{collection}} "{{slug}}"'
+    update: '更新 {{collection}} "{{slug}}"'
+    delete: '删除 {{collection}} "{{slug}}"'
+    uploadMedia: '上传媒体文件 "{{path}}"'
+    deleteMedia: '删除媒体文件 "{{path}}"'
+
+# 本地开发时使用 - 指定明确的URL
+local_backend:
+  url: http://localhost:8081/api/v1
+  allowed_hosts: ['localhost']
+
+# 启用编辑预览 - 使用相对路径避免硬编码域名
+site_url: http://localhost:1313
+display_url: http://localhost:1313
+logo_url: http://localhost:1313/images/logo.png
+
+publish_mode: editorial_workflow
+
+media_folder: "static/images/chapter-thumbs"
+public_folder: "/images/chapter-thumbs"
+
+# Markdown编辑器配置 - 关键修改：设置为textwidget类型解决中文输入问题
+editor:
+  preview: true
+
+# 重要：配置Markdown编辑器
+markdown:
+  default_mode: 'rich_text'
+  frontmatter_delimiter: ['---', '---']
+  show_raw: true
+  editor_components: []
+
+# slug配置
+slug:
+  encoding: "unicode"
+  clean_accents: false
+  sanitize_replacement: "-"
+
+# 支持中文的配置
+locale: 'zh_Hans'
+
+# 清除本地缓存
+local_backend_cache: false
+
+collections:
+  - name: "chapters"
+    label: "章节"
+    folder: "content/chapters"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
+      - { label: "章节 ID", name: "id", widget: "string", required: false, hint: "可选，用于唯一标识" }
+      - { label: "缩略图", name: "thumb", widget: "image", required: false, hint: "可选，章节缩略图" }
+      - { 
+          label: "正文", 
+          name: "body", 
+          widget: "text",
+          default: "这里可以输入文章内容..."
+        }
+
+  - name: "settings"
+    label: "设置"
+    files:
+      - name: "chaptersData"
+        label: "章节列表 (顺序)"
+        file: "data/chapters.yaml"
+        fields:
+          - label: "章节"
+            name: "chapters"
+            widget: "list"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "标题", name: "title", widget: "string" }
+              - { label: "缩略图", name: "thumb", widget: "string" }
+

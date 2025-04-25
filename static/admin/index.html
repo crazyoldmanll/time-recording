@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内容管理系统</title>
+  
+  <!-- 添加中文字体支持 -->
+  <style>
+    body, input, textarea, select, button {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif !important;
+    }
+    
+    /* 编辑器样式覆盖 */
+    .cms-editor-component textarea,
+    .CodeMirror, .CodeMirror-code, .CodeMirror-line,
+    [data-slate-editor="true"],
+    .richTextEditor {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif !important;
+      font-size: 16px !important;
+      line-height: 1.6 !important;
+    }
+    
+    .debug-info {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      max-width: 400px;
+      z-index: 9999;
+    }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <!-- 调试信息容器 -->
+  <div id="debug-info" class="debug-info">
+    <h3>调试信息</h3>
+    <div id="identity-status">Netlify Identity: 加载中...</div>
+    <div id="cms-status">Netlify CMS: 加载中...</div>
+    <div id="error-log"></div>
+  </div>
+
+  <!-- 添加 Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- 添加 Netlify CMS -->
+  <script src="https://unpkg.com/netlify-cms@^2.10.192/dist/netlify-cms.js"></script>
+  
+  <!-- 添加中文语言包 -->
+  <script src="https://unpkg.com/netlify-cms-locales@1.39.0/dist/zh_Hans.js"></script>
+  
+  <!-- 添加中文输入增强 -->
+  <script src="/admin/chinese.js"></script>
+  
+  <!-- 添加Markdown编辑器配置 -->
+  <script src="/admin/markdown.js"></script>
+  
+  <script>
+    // 调试日志函数
+    function logDebug(message, isError) {
+      const logEl = document.getElementById('error-log');
+      const div = document.createElement('div');
+      div.textContent = message;
+      div.className = isError ? 'error' : 'success';
+      logEl.appendChild(div);
+      console.log(message);
+    }
+
+    // 检查脚本是否加载成功
+    function checkScriptLoaded(name, obj) {
+      const statusEl = document.getElementById(name + '-status');
+      if (obj) {
+        statusEl.textContent = name + ": 加载成功";
+        statusEl.className = 'success';
+        return true;
+      } else {
+        statusEl.textContent = name + ": 加载失败!";
+        statusEl.className = 'error';
+        logDebug(name + " 无法加载，请检查网络连接或者脚本引用", true);
+        return false;
+      }
+    }
+    
+    // 等待DOM加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检查Netlify Identity是否加载
+      const identityLoaded = checkScriptLoaded('Netlify Identity', window.netlifyIdentity);
+      
+      // 检查CMS是否加载
+      const cmsLoaded = checkScriptLoaded('Netlify CMS', window.CMS);
+      
+      // Netlify Identity配置
+      if (identityLoaded) {
+        try {
+          window.netlifyIdentity.on("init", user => {
+            logDebug("Netlify Identity 初始化成功");
+            if (!user) {
+              logDebug("未检测到登录用户");
+              window.netlifyIdentity.on("login", () => {
+                logDebug("用户登录成功，准备跳转");
+                document.location.href = "/admin/";
+              });
+            } else {
+              logDebug("检测到用户: " + user.email);
+            }
+          });
+        } catch (e) {
+          logDebug("Netlify Identity 错误: " + e.message, true);
+        }
+      }
+      
+      // CMS配置
+      if (cmsLoaded) {
+        try {
+          // 设置中文语言
+          if (window.zh_Hans) {
+            CMS.registerLocale('zh_Hans', zh_Hans);
+            logDebug("中文语言包注册成功");
+          } else {
+            logDebug("中文语言包未加载", true);
+          }
+          
+          // 重置编辑器配置，启用中文支持
+          CMS.registerEditorComponent({
+            id: "reset-editor",
+            label: "重置编辑器",
+            fields: [],
+            pattern: /^$/,
+            fromBlock: function() {
+              return {};
+            },
+            toBlock: function() {
+              return "";
+            },
+            toPreview: function() {
+              return "";
+            }
+          });
+          
+          // 初始化CMS - 使用内联配置
+          CMS.init({
+            config: {
+              backend: {
+                name: "git-gateway",
+                branch: "main"
+              },
+              local_backend: {
+                url: "http://localhost:8081/api/v1"
+              },
+              load_config_file: true,
+              locale: 'zh_Hans'
+            }
+          });
+          
+          logDebug("CMS初始化完成");
+          
+          // 在初始化后额外添加中文支持
+          setTimeout(function() {
+            const editors = document.querySelectorAll('.cm-s-easymde');
+            editors.forEach(editor => {
+              editor.setAttribute('lang', 'zh-CN');
+              editor.style.fontFamily = '"PingFang SC", "Microsoft YaHei", sans-serif';
+              logDebug("找到并增强编辑器元素");
+            });
+          }, 2000);
+          
+        } catch (e) {
+          logDebug("CMS 错误: " + e.message, true);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+

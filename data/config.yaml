@@ -1,0 +1,10 @@
+- id: intro
+  title: "序章 · 初见"
+  thumb: "/images/chapter-thumbs/intro.jpg"
+- id: farm
+  title: "第一章 · 农场"
+  thumb: "/images/chapter-thumbs/farm.jpg"
+- id: city
+  title: "第二章 · 城市"
+  thumb: "/images/chapter-thumbs/city.jpg"
+

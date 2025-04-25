@@ -1,0 +1,16 @@
+baseURL: "https://USERNAME.github.io/REPO-NAME/"  # 替换为你的GitHub用户名和仓库名
+languageCode: "zh-CN"
+title: "我的自传体"
+theme: ""
+# 开启章节 collection
+module:
+  mounts:
+    - source: content/chapters
+      target: content/chapters
+outputs:
+  home: ["HTML", "RSS"]
+# 关闭 taxonomy（用不到）
+disableKinds: ["taxonomy"]
+# 让 Hugo 处理 .yaml 数据
+dataDir: data
+
