@@ -1,4 +1,4 @@
-baseURL: "https://USERNAME.github.io/REPO-NAME/"  # 替换为你的GitHub用户名和仓库名
+baseURL: "https://crazyoldmanll.github.io/my-autobiography/"  # 使用你的实际GitHub用户名
 languageCode: "zh-CN"
 title: "我的自传体"
 theme: ""
