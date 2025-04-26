@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: crazyoldmanll/time-recording  # 替换为你实际的GitHub用户名和仓库名
+  repo: crazyoldmanll/time-recording
   branch: main
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
@@ -9,26 +9,28 @@ backend:
     uploadMedia: '上传媒体文件 "{{path}}"'
     deleteMedia: '删除媒体文件 "{{path}}"'
 
-# 本地开发时使用 - 指定明确的URL
+# 本地开发配置 - 只在本地开发时使用
 local_backend:
+  # 当部署到生产环境时，这个配置不会生效
   url: http://localhost:8081/api/v1
   allowed_hosts: ['localhost']
 
-# 启用编辑预览 - 使用相对路径避免硬编码域名
-site_url: http://localhost:1313
-display_url: http://localhost:1313
-logo_url: http://localhost:1313/images/logo.png
+# 移除硬编码的localhost链接
+# 改为相对路径或自动检测当前域名
+site_url: /
+display_url: /
+logo_url: /images/logo.png
 
 publish_mode: editorial_workflow
 
 media_folder: "static/images/chapter-thumbs"
 public_folder: "/images/chapter-thumbs"
 
-# Markdown编辑器配置 - 关键修改：设置为textwidget类型解决中文输入问题
+# Markdown编辑器配置
 editor:
   preview: true
 
-# 重要：配置Markdown编辑器
+# 配置Markdown编辑器
 markdown:
   default_mode: 'rich_text'
   frontmatter_delimiter: ['---', '---']

@@ -213,10 +213,14 @@
           CMS.init({
             config: {
               backend: {
-                name: 'git-gateway',
-                local_backend: true
+                name: 'github',
+                repo: 'crazyoldmanll/time-recording',
+                branch: 'main'
               },
               local_backend: true,
+              site_url: '/',
+              display_url: '/',
+              logo_url: '/images/logo.png',
               publish_mode: 'editorial_workflow',
               media_folder: "static/images/chapter-thumbs",
               public_folder: "/images/chapter-thumbs",
