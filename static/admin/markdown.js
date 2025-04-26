@@ -140,14 +140,136 @@
           .editor-preview th {
             background: #f5f5f5;
           }
+          
+          /* 增强图片编辑体验 */
+          .cms-editor-component--image {
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            background: #f9f9f9;
+          }
+          
+          /* 增强表格编辑体验 */
+          .cms-editor-component--table {
+            margin: 15px 0;
+            overflow-x: auto;
+          }
+          
+          /* 添加字体选择和字号控制 */
+          .cms-font-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+          }
+          
+          .cms-font-control select {
+            margin: 0 8px;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+          }
+          
+          /* 增强格式化粘贴的内容样式 */
+          .formatted-paste-content {
+            margin: 8px 0;
+            padding: 5px;
+            border-left: 3px solid #3a69c7;
+            background: rgba(58, 105, 199, 0.05);
+          }
         `;
         document.head.appendChild(style);
+        
+        // 添加额外的编辑工具
+        addExtraEditTools(container);
       });
+    }
+    
+    // 添加额外的编辑工具
+    function addExtraEditTools(container) {
+      // 查找工具栏
+      const toolbar = container.querySelector('.editor-toolbar');
+      if (!toolbar) return;
+      
+      // 防止重复添加
+      if (toolbar.querySelector('.cms-extra-tools')) return;
+      
+      // 创建字体控制工具组
+      const fontControls = document.createElement('div');
+      fontControls.className = 'cms-extra-tools';
+      fontControls.style.display = 'flex';
+      fontControls.style.alignItems = 'center';
+      fontControls.style.marginLeft = '10px';
+      
+      // 字体选择
+      const fontSelect = document.createElement('select');
+      fontSelect.title = '选择字体';
+      fontSelect.innerHTML = `
+        <option value="default">默认字体</option>
+        <option value="songti">宋体</option>
+        <option value="heiti">黑体</option>
+        <option value="kaiti">楷体</option>
+        <option value="yahei">微软雅黑</option>
+      `;
+      fontSelect.addEventListener('change', function() {
+        const font = this.value;
+        if (font === 'default') return;
+        
+        const cm = container.querySelector('.CodeMirror').CodeMirror;
+        const selection = cm.getSelection();
+        if (selection) {
+          // 使用HTML标签包装选中的文本
+          const fontTag = `<span style="font-family: ${getFontFamily(font)};">${selection}</span>`;
+          cm.replaceSelection(fontTag);
+        }
+      });
+      
+      // 添加工具提示
+      const toolTip = document.createElement('div');
+      toolTip.className = 'cms-tooltip';
+      toolTip.textContent = '提示: 按Ctrl+Alt+V可保留格式粘贴';
+      toolTip.style.fontSize = '12px';
+      toolTip.style.color = '#888';
+      toolTip.style.marginLeft = '10px';
+      
+      // 添加到工具栏
+      fontControls.appendChild(fontSelect);
+      toolbar.appendChild(fontControls);
+      toolbar.appendChild(toolTip);
+      
+      // 添加键盘快捷键
+      const cmEditor = container.querySelector('.CodeMirror');
+      if (cmEditor && cmEditor.CodeMirror) {
+        cmEditor.CodeMirror.setOption('extraKeys', {
+          'Ctrl-Alt-V': function(cm) {
+            navigator.clipboard.read().then(function(data) {
+              // 触发自定义格式化粘贴
+              handleFormattedPaste(cm);
+            }).catch(function(err) {
+              console.error('读取剪贴板失败:', err);
+            });
+          }
+        });
+      }
+    }
+    
+    // 获取字体系列
+    function getFontFamily(fontType) {
+      switch(fontType) {
+        case 'songti': return 'SimSun, serif';
+        case 'heiti': return 'SimHei, sans-serif';
+        case 'kaiti': return 'KaiTi, cursive';
+        case 'yahei': return '"Microsoft YaHei", sans-serif';
+        default: return 'inherit';
+      }
     }
     
     // 注册自定义编辑器组件
     function registerCustomComponents() {
-      // 图片组件增强
+      // 增强图片组件
       CMS.registerEditorComponent({
         id: "enhanced-image",
         label: "增强图片",
@@ -207,13 +329,15 @@
         }
       });
       
-      // 表格组件
+      // 高级表格组件
       CMS.registerEditorComponent({
-        id: "table",
-        label: "表格",
+        id: "advanced-table",
+        label: "高级表格",
         fields: [
           { name: 'headers', label: '表头（逗号分隔）', widget: 'string' },
-          { name: 'rows', label: '行数据（每行一组，逗号分隔）', widget: 'list' }
+          { name: 'rows', label: '行数据（每行一组，逗号分隔）', widget: 'list' },
+          { name: 'bordered', label: '显示边框', widget: 'boolean', default: true },
+          { name: 'striped', label: '条纹样式', widget: 'boolean', default: false }
         ],
         pattern: /^\|(.+)\|\n\|([-:]+)\|\n((?:\|(?:.+)\|\n)+)$/,
         fromBlock: function(match) {
@@ -223,7 +347,9 @@
           );
           return {
             headers: headers.join(', '),
-            rows: rows.map(r => r.join(', '))
+            rows: rows.map(r => r.join(', ')),
+            bordered: true,
+            striped: false
           };
         },
         toBlock: function(data) {
@@ -233,7 +359,8 @@
           
           const bodyRows = data.rows.map(rowStr => {
             const cells = rowStr.split(',').map(c => c.trim());
-            return `| ${cells.join(' | ')} |`;
+            const paddedCells = cells.concat(Array(headers.length - cells.length).fill(''));
+            return `| ${paddedCells.join(' | ')} |`;
           }).join('\n');
           
           return `${headerRow}\n${separatorRow}\n${bodyRows}`;
@@ -244,11 +371,14 @@
           
           const bodyRows = data.rows.map(rowStr => {
             const cells = rowStr.split(',').map(c => c.trim());
-            return `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            const paddedCells = cells.concat(Array(headers.length - cells.length).fill(''));
+            return `<tr>${paddedCells.map(c => `<td>${c}</td>`).join('')}</tr>`;
           }).join('');
           
+          const tableClass = `${data.bordered ? 'bordered ' : ''}${data.striped ? 'striped' : ''}`.trim();
+          
           return `
-            <table>
+            <table class="${tableClass}" style="width:100%;border-collapse:collapse;margin:15px 0;">
               <thead>
                 <tr>${headerCells}</tr>
               </thead>
@@ -259,153 +389,285 @@
           `;
         }
       });
+      
+      // 文本样式组件
+      CMS.registerEditorComponent({
+        id: "styled-text",
+        label: "文本样式",
+        fields: [
+          { name: 'text', label: '文本内容', widget: 'text' },
+          { 
+            name: 'style', 
+            label: '样式', 
+            widget: 'select', 
+            options: ['默认', '重点强调', '警告', '提示', '注意'],
+            default: '默认'
+          },
+          { name: 'textAlign', label: '对齐方式', widget: 'select', options: ['左对齐', '居中', '右对齐'], default: '左对齐' }
+        ],
+        pattern: /^<div style="([^"]+)">([\s\S]*?)<\/div>$/,
+        fromBlock: function(match) {
+          return {
+            text: match[2],
+            style: getStyleType(match[1]),
+            textAlign: getAlignType(match[1])
+          };
+        },
+        toBlock: function(data) {
+          let style = '';
+          
+          // 文本对齐
+          if (data.textAlign === '居中') style += 'text-align:center;';
+          else if (data.textAlign === '右对齐') style += 'text-align:right;';
+          
+          // 样式类型
+          if (data.style === '重点强调') {
+            style += 'color:#d32f2f;font-weight:bold;';
+          } else if (data.style === '警告') {
+            style += 'background-color:#fff3cd;color:#856404;padding:10px;border-left:4px solid #ffeeba;';
+          } else if (data.style === '提示') {
+            style += 'background-color:#d4edda;color:#155724;padding:10px;border-left:4px solid #c3e6cb;';
+          } else if (data.style === '注意') {
+            style += 'background-color:#d1ecf1;color:#0c5460;padding:10px;border-left:4px solid #bee5eb;';
+          }
+          
+          return `<div style="${style}">${data.text}</div>`;
+        },
+        toPreview: function(data) {
+          let style = '';
+          
+          // 文本对齐
+          if (data.textAlign === '居中') style += 'text-align:center;';
+          else if (data.textAlign === '右对齐') style += 'text-align:right;';
+          
+          // 样式类型
+          if (data.style === '重点强调') {
+            style += 'color:#d32f2f;font-weight:bold;';
+          } else if (data.style === '警告') {
+            style += 'background-color:#fff3cd;color:#856404;padding:10px;border-radius:4px;border-left:4px solid #ffeeba;';
+          } else if (data.style === '提示') {
+            style += 'background-color:#d4edda;color:#155724;padding:10px;border-radius:4px;border-left:4px solid #c3e6cb;';
+          } else if (data.style === '注意') {
+            style += 'background-color:#d1ecf1;color:#0c5460;padding:10px;border-radius:4px;border-left:4px solid #bee5eb;';
+          }
+          
+          return `<div style="${style}">${data.text}</div>`;
+        }
+      });
+      
+      // 字体样式组件
+      CMS.registerEditorComponent({
+        id: "font-style",
+        label: "字体样式",
+        fields: [
+          { name: 'text', label: '文本内容', widget: 'string' },
+          { name: 'fontSize', label: '字号(px)', widget: 'number', default: 16, min: 12, max: 36 },
+          { 
+            name: 'fontFamily', 
+            label: '字体', 
+            widget: 'select',
+            options: ['默认', '宋体', '黑体', '楷体', '微软雅黑'],
+            default: '默认'
+          },
+          { name: 'color', label: '颜色', widget: 'string', default: '' }
+        ],
+        pattern: /^<span style="([^"]+)">([\s\S]*?)<\/span>$/,
+        fromBlock: function(match) {
+          const style = match[1];
+          const text = match[2];
+          
+          // 解析样式
+          const fontSize = (style.match(/font-size:\s*(\d+)px/) || [])[1] || 16;
+          const fontFamily = getFontTypeFromFamily(style);
+          const color = (style.match(/color:\s*([^;]+)/) || [])[1] || '';
+          
+          return {
+            text,
+            fontSize,
+            fontFamily,
+            color
+          };
+        },
+        toBlock: function(data) {
+          let style = '';
+          
+          if (data.fontSize && data.fontSize != 16) {
+            style += `font-size:${data.fontSize}px;`;
+          }
+          
+          if (data.fontFamily && data.fontFamily !== '默认') {
+            style += `font-family:${getFontFamily(data.fontFamily.toLowerCase())};`;
+          }
+          
+          if (data.color) {
+            style += `color:${data.color};`;
+          }
+          
+          return style ? `<span style="${style}">${data.text}</span>` : data.text;
+        },
+        toPreview: function(data) {
+          let style = '';
+          
+          if (data.fontSize && data.fontSize != 16) {
+            style += `font-size:${data.fontSize}px;`;
+          }
+          
+          if (data.fontFamily && data.fontFamily !== '默认') {
+            style += `font-family:${getFontFamily(data.fontFamily.toLowerCase())};`;
+          }
+          
+          if (data.color) {
+            style += `color:${data.color};`;
+          }
+          
+          return style ? `<span style="${style}">${data.text}</span>` : data.text;
+        }
+      });
+    }
+    
+    // 获取样式类型
+    function getStyleType(styleStr) {
+      if (styleStr.includes('color:#d32f2f')) return '重点强调';
+      if (styleStr.includes('background-color:#fff3cd')) return '警告';
+      if (styleStr.includes('background-color:#d4edda')) return '提示';
+      if (styleStr.includes('background-color:#d1ecf1')) return '注意';
+      return '默认';
+    }
+    
+    // 获取对齐类型
+    function getAlignType(styleStr) {
+      if (styleStr.includes('text-align:center')) return '居中';
+      if (styleStr.includes('text-align:right')) return '右对齐';
+      return '左对齐';
+    }
+    
+    // 从样式中获取字体类型
+    function getFontTypeFromFamily(styleStr) {
+      if (styleStr.includes('SimSun')) return '宋体';
+      if (styleStr.includes('SimHei')) return '黑体';
+      if (styleStr.includes('KaiTi')) return '楷体';
+      if (styleStr.includes('Microsoft YaHei')) return '微软雅黑';
+      return '默认';
     }
     
     // 处理粘贴事件，保留格式
     function handlePasteWithFormat(e) {
-      // 如果粘贴的是纯文本，则不做处理
-      if (!e.clipboardData || !e.clipboardData.types || !e.clipboardData.types.includes('text/html')) {
-        return;
-      }
-      
-      // 获取粘贴的HTML内容
-      const html = e.clipboardData.getData('text/html');
-      console.log('粘贴HTML:', html);
-      
-      // 转换HTML为Markdown
       try {
-        // 简单的HTML到Markdown转换
-        let markdown = html
-          // 处理标题
-          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
-          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
-          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
-          .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '#### $1\n\n')
-          .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '##### $1\n\n')
-          .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '###### $1\n\n')
-          // 处理加粗和斜体
-          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
-          .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
-          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
-          .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
-          // 处理链接
-          .replace(/<a[^>]*href=["'](.*?)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)')
-          // 处理图片
-          .replace(/<img[^>]*src=["'](.*?)["'][^>]*alt=["'](.*?)["'][^>]*>/gi, '![$2]($1)')
-          .replace(/<img[^>]*alt=["'](.*?)["'][^>]*src=["'](.*?)["'][^>]*>/gi, '![$1]($2)')
-          .replace(/<img[^>]*src=["'](.*?)["'][^>]*>/gi, '![]($1)')
-          // 处理列表
-          .replace(/<ul[^>]*>(.*?)<\/ul>/gis, function(match, content) {
-            return content.replace(/<li[^>]*>(.*?)<\/li>/gis, '- $1\n');
-          })
-          .replace(/<ol[^>]*>(.*?)<\/ol>/gis, function(match, content) {
-            let index = 1;
-            return content.replace(/<li[^>]*>(.*?)<\/li>/gis, function(match, item) {
-              return `${index++}. ${item}\n`;
-            });
-          })
-          // 处理引用
-          .replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gis, '> $1\n')
-          // 处理段落和换行
-          .replace(/<p[^>]*>(.*?)<\/p>/gis, '$1\n\n')
-          .replace(/<br[^>]*>/gi, '\n')
-          // 处理表格 (简单支持)
-          .replace(/<table[^>]*>(.*?)<\/table>/gis, function(match, tableContent) {
-            let result = '';
-            // 提取表头
-            const headerMatch = tableContent.match(/<th[^>]*>(.*?)<\/th>/gis);
-            if (headerMatch) {
-              const headers = headerMatch.map(h => h.replace(/<\/?th[^>]*>/gi, '').trim());
-              result += `| ${headers.join(' | ')} |\n`;
-              result += `| ${headers.map(() => '---').join(' | ')} |\n`;
-            }
-            // 提取表格行
-            const rowsMatch = tableContent.match(/<tr[^>]*>((?!<th).*?)<\/tr>/gis);
-            if (rowsMatch) {
-              rowsMatch.forEach(row => {
-                const cells = row.match(/<td[^>]*>(.*?)<\/td>/gis)
-                  ?.map(cell => cell.replace(/<\/?td[^>]*>/gi, '').trim()) || [];
-                if (cells.length > 0) {
-                  result += `| ${cells.join(' | ')} |\n`;
-                }
-              });
-            }
-            return result;
-          })
-          // 清理剩余的HTML标签
-          .replace(/<[^>]*>/g, '')
-          // 修复空格和换行
-          .replace(/&nbsp;/g, ' ')
-          .replace(/\n\s*\n\s*\n/g, '\n\n');
+        // 检查是否有HTML内容
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) return;
         
-        // 插入转换后的Markdown
-        const textarea = e.target;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        const before = text.substring(0, start);
-        const after = text.substring(end, text.length);
+        const html = clipboardData.getData('text/html');
+        const text = clipboardData.getData('text');
         
-        textarea.value = before + markdown + after;
-        textarea.selectionStart = start + markdown.length;
-        textarea.selectionEnd = start + markdown.length;
+        // 如果没有HTML内容，则使用默认处理
+        if (!html) return;
         
-        // 触发textarea的input事件
-        const event = new Event('input', { bubbles: true });
-        textarea.dispatchEvent(event);
-        
-        // 阻止默认粘贴行为
-        e.preventDefault();
-        console.log('处理粘贴完成，已转换为Markdown');
-      } catch (error) {
-        console.error('处理粘贴出错:', error);
+        // 如果同时按下Ctrl+Shift，则强制保留格式
+        if (e.ctrlKey && e.shiftKey) {
+          e.preventDefault();
+          
+          // 处理HTML内容，转换为Markdown
+          const cleanedHtml = cleanHtml(html);
+          document.execCommand('insertHTML', false, cleanedHtml);
+        }
+      } catch (err) {
+        console.error('粘贴处理错误:', err);
       }
     }
     
-    // 处理CodeMirror编辑器的粘贴事件
+    // 处理CodeMirror粘贴事件
     function handleCodeMirrorPaste(cm, e) {
-      if (!e.clipboardData || !e.clipboardData.types || !e.clipboardData.types.includes('text/html')) {
-        return;
-      }
-      
       try {
-        // 获取粘贴的HTML内容
-        const html = e.clipboardData.getData('text/html');
-        console.log('CodeMirror粘贴HTML:', html);
+        // 检查是否有HTML内容
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) return;
         
-        // 同样的HTML到Markdown转换逻辑
-        // 此处省略，与上面相同的转换代码
+        const html = clipboardData.getData('text/html');
+        const text = clipboardData.getData('text');
         
-        // 此处简化处理，实际应用中需要完整转换
-        let markdown = html
-          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
-          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
-          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
-          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
-          .replace(/<a[^>]*href=["'](.*?)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)')
-          .replace(/<p[^>]*>(.*?)<\/p>/gis, '$1\n\n')
-          .replace(/<br[^>]*>/gi, '\n')
-          .replace(/<[^>]*>/g, '')
-          .replace(/&nbsp;/g, ' ')
-          .replace(/\n\s*\n\s*\n/g, '\n\n');
+        // 如果没有HTML内容，则使用默认处理
+        if (!html) return;
         
-        // 在当前光标位置插入Markdown
-        cm.replaceSelection(markdown);
-        
-        // 阻止默认粘贴行为
-        e.preventDefault();
-        console.log('CodeMirror处理粘贴完成');
-      } catch (error) {
-        console.error('CodeMirror处理粘贴出错:', error);
+        // 如果同时按下Ctrl+Shift，则强制保留格式
+        if (e.ctrlKey && e.shiftKey) {
+          e.preventDefault();
+          
+          // 将HTML转换为Markdown
+          htmlToMarkdown(html).then(markdown => {
+            // 插入转换后的Markdown内容
+            cm.replaceSelection(markdown);
+          }).catch(err => {
+            // 出错时回退到普通文本
+            cm.replaceSelection(text);
+            console.error('HTML转Markdown错误:', err);
+          });
+        }
+      } catch (err) {
+        console.error('CodeMirror粘贴处理错误:', err);
       }
     }
     
-    // 初始运行一次
-    setupEditors();
+    // 处理格式化粘贴(Ctrl+Alt+V触发)
+    function handleFormattedPaste(cm) {
+      try {
+        // 读取剪贴板内容
+        navigator.clipboard.readText()
+          .then(text => {
+            // 创建一个带有简单格式标记的文本
+            const formattedText = `<div class="formatted-paste-content">${text.replace(/\n/g, '<br>')}</div>`;
+            cm.replaceSelection(formattedText);
+          })
+          .catch(err => {
+            console.error('读取剪贴板失败:', err);
+            cm.replaceSelection('无法读取剪贴板内容');
+          });
+      } catch (e) {
+        console.error('格式化粘贴错误:', e);
+      }
+    }
     
-    // 每隔一段时间运行一次以捕获动态创建的编辑器
-    setInterval(setupEditors, 1000);
+    // 清理HTML内容
+    function cleanHtml(html) {
+      // 创建一个临时元素
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      
+      // 移除所有脚本和样式标签
+      const scripts = div.querySelectorAll('script, style');
+      scripts.forEach(script => script.remove());
+      
+      // 简化HTML结构
+      return div.innerHTML;
+    }
     
-    console.log('Markdown编辑器配置完成');
+    // HTML转Markdown
+    function htmlToMarkdown(html) {
+      return new Promise((resolve, reject) => {
+        try {
+          // 创建临时元素
+          const div = document.createElement('div');
+          div.innerHTML = html;
+          
+          // 简单的HTML到Markdown转换
+          let markdown = '';
+          
+          // 处理段落
+          const paragraphs = div.querySelectorAll('p');
+          paragraphs.forEach(p => {
+            markdown += p.textContent + '\n\n';
+          });
+          
+          // 如果没有段落，则使用div的内容
+          if (paragraphs.length === 0) {
+            markdown = div.textContent;
+          }
+          
+          resolve(markdown);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
   }
 })(); 

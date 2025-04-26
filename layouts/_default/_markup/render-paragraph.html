@@ -1,0 +1,4 @@
+{{ $content := .Inner }}
+{{ $content := replace $content "\\" "" }}
+{{ $content := replace $content "\n" "<br>" }}
+<p>{{ $content | safeHTML }}</p> 

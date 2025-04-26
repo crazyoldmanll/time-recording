@@ -48,7 +48,7 @@
       <h2 class="section-title"><span>书籍目录</span></h2>
       
       <div class="books-showcase">
-        {{ $books := where .Site.Pages "Section" "books" }}
+        {{ $books := where site.Pages "Section" "books" }}
         {{ $regularBooks := where $books "Kind" "page" }}
         {{ if gt (len $regularBooks) 0 }}
         <div class="books-layout">
@@ -78,7 +78,7 @@
                   <p class="book-desc">{{ with $book.Params.description }}{{ . }}{{ else }}{{ $book.Summary }}{{ end }}</p>
                   <div class="book-meta">
                     {{ $bookID := $book.File.BaseFileName }}
-                    {{ $chapters := where .Site.RegularPages "Params.book" $bookID }}
+                    {{ $chapters := where site.RegularPages "Params.book" $bookID }}
                     <span class="chapters-count"><i class="fas fa-book-open"></i> {{ len $chapters }} 章节</span>
                     <span class="date"><i class="far fa-calendar-alt"></i> {{ $book.Date.Format "2006-01-02" }}</span>
                   </div>
@@ -91,7 +91,7 @@
               <div class="book-chapters">
                 <h4>最新章节</h4>
                 {{ $bookID := $book.File.BaseFileName }}
-                {{ $chapters := where .Site.RegularPages "Params.book" $bookID }}
+                {{ $chapters := where site.RegularPages "Params.book" $bookID }}
                 {{ if $chapters }}
                   <ul class="chapters-preview">
                     {{ range first 3 $chapters.ByDate.Reverse }}
@@ -374,41 +374,6 @@
       }
     }
   </style>
-
-  <section class="contact-section" id="contact">
-    <div class="container">
-      <h2 class="section-title"><span>联系我</span></h2>
-      <div class="contact-content">
-        <div class="contact-info">
-          <h3>让我们保持联系</h3>
-          <p>无论是对故事的感想、建议，还是合作意向，都欢迎与我交流。</p>
-          <ul class="contact-list">
-            <li><i class="fas fa-envelope"></i> <a href="mailto:example@domain.com">example@domain.com</a></li>
-            <li><i class="fab fa-weixin"></i> <span>微信号：yourwechat</span></li>
-            <li><i class="fab fa-weibo"></i> <a href="https://weibo.com/u/yourweibo">@你的微博</a></li>
-          </ul>
-        </div>
-        <div class="contact-form">
-          <form id="contact-form" name="contact" method="POST" data-netlify="true">
-            <input type="hidden" name="form-name" value="contact">
-            <div class="form-group">
-              <label for="name">您的姓名</label>
-              <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-              <label for="email">电子邮箱</label>
-              <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="message">留言内容</label>
-              <textarea id="message" name="message" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="submit-button">发送留言</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <footer class="site-footer">
     <div class="container">

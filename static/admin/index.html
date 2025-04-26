@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>内容管理系统</title>
   
+  <!-- 添加Font Awesome图标库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
   <!-- 添加中文字体支持 -->
   <style>
     body, input, textarea, select, button {
@@ -39,58 +42,127 @@
       outline: none !important;
     }
     
-    /* 富文本编辑器增强 */
+    /* 增强富文本编辑器样式 */
     .richTextEditor {
-      min-height: 300px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px;
+      min-height: 500px !important;
+      border: 1px solid #ddd !important;
+      border-radius: 4px !important;
+      padding: 20px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
     }
     
     .richTextEditor:focus {
-      outline: none;
-      border-color: #3a69c7;
-      box-shadow: 0 0 0 3px rgba(58, 105, 199, 0.1);
+      outline: none !important;
+      border-color: #3a69c7 !important;
+      box-shadow: 0 0 0 3px rgba(58, 105, 199, 0.1) !important;
     }
     
-    /* 图文编辑工具栏 */
-    .rich-text-toolbar {
-      margin-bottom: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      background: #f8f8f8;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #eee;
+    /* 增强富文本工具栏 */
+    .cms-editor-toolbar {
+      margin-bottom: 15px !important;
+      padding: 10px !important;
+      background: #f8f9fa !important;
+      border: 1px solid #e9ecef !important;
+      border-radius: 4px !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
     }
     
-    .rich-text-toolbar button {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 5px 10px;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #555;
+    .cms-editor-toolbar button {
+      min-width: 36px !important;
+      height: 36px !important;
+      padding: 0 8px !important;
+      border: 1px solid #dee2e6 !important;
+      background: white !important;
+      border-radius: 4px !important;
+      cursor: pointer !important;
+      color: #495057 !important;
+      font-size: 14px !important;
+      transition: all 0.2s !important;
     }
     
-    .rich-text-toolbar button:hover {
-      background: #f0f0f0;
+    .cms-editor-toolbar button:hover {
+      background: #f1f3f5 !important;
+      border-color: #ced4da !important;
     }
     
-    .rich-text-toolbar button i {
-      margin-right: 4px;
+    .cms-editor-toolbar button.active {
+      background: #e9ecef !important;
+      border-color: #adb5bd !important;
+      color: #212529 !important;
     }
     
-    .rich-text-toolbar .separator {
-      width: 1px;
-      height: 24px;
-      background: #ddd;
-      margin: 0 4px;
+    /* 图片增强功能 */
+    .cms-editor-component--image img {
+      max-width: 100% !important;
+      border-radius: 4px !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* 让编辑器支持段落和格式化粘贴 */
+    .cms .Pane2 iframe {
+      min-height: 600px !important;
+    }
+    
+    /* 修复中文输入法问题 */
+    .Pane1 {
+      position: relative;
+      z-index: 100;
+    }
+    
+    /* 表格样式增强 */
+    .cms-editor-component--table table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      margin: 15px 0 !important;
+    }
+    
+    .cms-editor-component--table th,
+    .cms-editor-component--table td {
+      padding: 10px !important;
+      border: 1px solid #dee2e6 !important;
+      text-align: left !important;
+    }
+    
+    .cms-editor-component--table th {
+      background: #f8f9fa !important;
+      font-weight: bold !important;
+    }
+    
+    /* 增强链接样式 */
+    .richTextEditor a {
+      color: #3a69c7 !important;
+      text-decoration: underline !important;
+    }
+    
+    /* 引用块样式 */
+    .richTextEditor blockquote {
+      margin: 15px 0 !important;
+      padding: 10px 15px !important;
+      border-left: 4px solid #3a69c7 !important;
+      background: #f8f9fa !important;
+      color: #495057 !important;
+    }
+    
+    /* 段落间距 */
+    .richTextEditor p {
+      margin-bottom: 1em !important;
+    }
+    
+    /* 列表样式 */
+    .richTextEditor ul,
+    .richTextEditor ol {
+      margin-left: 1.5em !important;
+      margin-bottom: 1em !important;
+    }
+    
+    /* 文章预览样式 */
+    .cms-editor-preview {
+      padding: 20px !important;
+      background: white !important;
+      border-radius: 8px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
     }
     
     .debug-info {
@@ -107,6 +179,351 @@
     }
     .error { color: red; }
     .success { color: green; }
+    
+    /* 书籍章节管理区域样式 */
+    [data-field-name="chapters_relation"] {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f5f7fa;
+      border-radius: 6px;
+      border-left: 4px solid #3a69c7;
+    }
+    
+    [data-field-name="chapters_relation"] > label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #3a69c7;
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    .create-chapter-btn {
+      margin-top: 10px;
+      background: #3a69c7;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    
+    .create-chapter-btn:hover {
+      background: #2a59b7;
+    }
+    
+    /* 书籍编辑页章节管理列表 */
+    .book-chapters-manager {
+      display: block !important;
+      margin: 20px !important;
+      background: white !important;
+      border-radius: 6px !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      overflow: hidden !important;
+    }
+    
+    .book-chapters-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f5f7fa;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .book-chapters-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+    
+    .add-chapter-btn {
+      background: #3a69c7 !important;
+      color: white !important;
+      border: none !important;
+      padding: 8px 15px !important;
+      border-radius: 4px !important;
+      cursor: pointer !important;
+      font-weight: 500 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      transition: background-color 0.3s !important;
+    }
+    
+    .add-chapter-btn:hover {
+      background: #2a59b7 !important;
+    }
+    
+    .book-chapters-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .chapter-item {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 12px 20px !important;
+      border-bottom: 1px solid #eee !important;
+      transition: background 0.2s !important;
+      cursor: pointer !important;
+    }
+    
+    .chapter-item:hover {
+      background: #f5f7fa !important;
+    }
+    
+    .chapter-info {
+      flex: 1;
+    }
+    
+    .chapter-title {
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      color: #333 !important;
+      margin: 0 0 5px 0 !important;
+      cursor: pointer !important;
+    }
+    
+    .chapter-title:hover {
+      color: #3a69c7 !important;
+      text-decoration: underline !important;
+    }
+    
+    .chapter-meta {
+      font-size: 13px;
+      color: #888;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .chapter-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .chapter-action-btn {
+      background: #f0f2f5 !important;
+      border: none !important;
+      border-radius: 4px !important;
+      padding: 6px 10px !important;
+      color: #555 !important;
+      cursor: pointer !important;
+      transition: all 0.2s !important;
+      font-size: 13px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    
+    .chapter-action-btn:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    .chapter-action-btn.edit {
+      background: #edf5ff !important;
+      color: #3a69c7 !important;
+    }
+    
+    .chapter-action-btn.edit:hover {
+      background: #dbeafe !important;
+    }
+    
+    .chapter-action-btn.delete {
+      background: #fff1f0 !important;
+      color: #cf1322 !important;
+    }
+    
+    .chapter-action-btn.delete:hover {
+      background: #ffccc7 !important;
+    }
+    
+    .no-chapters {
+      padding: 30px;
+      text-align: center;
+      color: #888;
+    }
+    
+    .book-select {
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      max-width: 150px;
+    }
+    
+    /* 隐藏书籍编辑页面的默认预览区域 */
+    .nc-entryEditor--books .nc-entryEditor-previewPane > div:not(.book-chapters-manager) {
+      display: none !important;
+    }
+    
+    /* 使章节管理面板在右侧更加显眼 */
+    .nc-entryEditor-previewPane {
+      background: #f8f9fa !important;
+      border-left: 1px solid #e9ecef !important;
+      padding: 0 !important;
+    }
+    
+    /* 书籍编辑页面章节管理的增强样式 */
+    .fixed-chapter-control {
+      position: fixed;
+      top: 64px;
+      right: 20px;
+      z-index: 1000;
+      background: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      border-radius: 8px;
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .fixed-chapter-control:hover {
+      width: 200px;
+    }
+    
+    .fixed-chapter-control:hover .control-label {
+      display: inline-block;
+    }
+    
+    .chapter-control-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      background: #f5f7fa;
+      color: #555;
+      transition: all 0.3s ease;
+    }
+    
+    .chapter-control-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .chapter-control-btn.add {
+      background: #3a69c7;
+      color: white;
+    }
+    
+    .chapter-control-btn.list {
+      background: #5cb85c;
+      color: white;
+    }
+    
+    .control-label {
+      display: none;
+      position: absolute;
+      left: 50px;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    /* 章节列表弹窗 */
+    .chapters-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .chapters-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .chapters-modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 0;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+    
+    .chapters-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      background: #f8f9fa;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .chapters-modal-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+    
+    .close-modal {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #666;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .close-modal:hover {
+      background: #f0f0f0;
+    }
+    
+    .chapters-modal-body {
+      padding: 0;
+    }
+    
+    .chapter-search {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .chapter-search input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .chapter-search input:focus {
+      border-color: #3a69c7;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(58, 105, 199, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -173,7 +590,7 @@
       // 添加直接增强文本编辑器的逻辑
       function enhanceTextEditor() {
         // 获取所有文本编辑器
-        const textareas = document.querySelectorAll('.widget-text textarea, textarea[name="body"]');
+        const textareas = document.querySelectorAll('.widget-text textarea, textarea[name="body"]:not([data-collection="books"])');
         textareas.forEach(textarea => {
           if (!textarea.getAttribute('data-enhanced')) {
             textarea.setAttribute('data-enhanced', 'true');
@@ -213,14 +630,13 @@
           CMS.init({
             config: {
               backend: {
-                name: 'github',
-                repo: 'crazyoldmanll/time-recording',
-                branch: 'main'
+                name: 'git-gateway',
+                local_backend: true
               },
               local_backend: true,
-              site_url: '/',
-              display_url: '/',
-              logo_url: '/images/logo.png',
+              site_url: 'http://localhost:1313',
+              display_url: 'http://localhost:1313',
+              logo_url: 'http://localhost:1313/images/logo.png',
               publish_mode: 'editorial_workflow',
               media_folder: "static/images/chapter-thumbs",
               public_folder: "/images/chapter-thumbs",
@@ -236,14 +652,7 @@
                     { label: "标题", name: "title", widget: "string" },
                     { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" },
                     { label: "描述", name: "description", widget: "string", required: false, hint: "书籍简短描述" },
-                    { label: "封面", name: "cover", widget: "image", required: false, hint: "书籍封面图片" },
-                    { 
-                      label: "正文", 
-                      name: "body", 
-                      widget: "text",
-                      default: "书籍介绍内容...",
-                      hint: "书籍详细介绍"
-                    }
+                    { label: "封面", name: "cover", widget: "image", required: false, hint: "书籍封面图片" }
                   ]
                 },
                 {
@@ -291,8 +700,227 @@
           // 注册预览组件
           CMS.registerPreviewStyle("/css/style.css");
           
-          // 创建增强的编辑预览
-          const MarkdownPreview = createClass({
+          // 自定义书籍编辑预览组件，用于显示章节列表
+          const BookChaptersPreview = createClass({
+            render: function() {
+              const {entry} = this.props;
+              const bookSlug = entry.get('slug');
+              
+              // 渲染一个容器，实际章节列表将通过JavaScript动态加载
+              return h('div', {className: 'book-chapters-preview', 'data-book-slug': bookSlug},
+                h('div', {className: 'chapters-loading'}, '正在加载章节列表...')
+              );
+            },
+            
+            componentDidMount: function() {
+              // 组件挂载后，查找用于动态加载章节的容器
+              const container = document.querySelector('.book-chapters-preview');
+              if (container) {
+                const bookSlug = container.getAttribute('data-book-slug');
+                this.setupChaptersManager(container, bookSlug);
+              }
+            },
+            
+            setupChaptersManager: function(container, bookSlug) {
+              if (!bookSlug) {
+                container.innerHTML = '<div class="no-chapters">请先保存书籍或输入书籍标识</div>';
+                return;
+              }
+              
+              // 创建章节管理器容器
+              const chaptersManager = document.createElement('div');
+              chaptersManager.className = 'book-chapters-manager';
+              
+              // 创建标题栏
+              const header = document.createElement('div');
+              header.className = 'book-chapters-header';
+              
+              const title = document.createElement('h3');
+              title.className = 'book-chapters-title';
+              title.textContent = '章节管理';
+              
+              const addBtn = document.createElement('button');
+              addBtn.className = 'add-chapter-btn';
+              addBtn.innerHTML = '<i class="fas fa-plus"></i> 新增章节';
+              addBtn.addEventListener('click', function() {
+                // 保存当前书籍slug到localStorage
+                localStorage.setItem('temp_parent_book', bookSlug);
+                // 打开新窗口创建章节
+                window.open('/admin/#/collections/chapters/new', '_blank');
+              });
+              
+              header.appendChild(title);
+              header.appendChild(addBtn);
+              chaptersManager.appendChild(header);
+              
+              // 创建章节列表容器
+              const chaptersList = document.createElement('ul');
+              chaptersList.className = 'book-chapters-list';
+              chaptersManager.appendChild(chaptersList);
+              
+              // 清空容器并添加章节管理器
+              container.innerHTML = '';
+              container.appendChild(chaptersManager);
+              
+              // 加载章节数据
+              this.loadChapters(bookSlug, chaptersList);
+            },
+            
+            loadChapters: function(bookSlug, container) {
+              container.innerHTML = '<div style="padding: 20px; text-align: center;">正在加载章节...</div>';
+              
+              // 获取所有章节
+              CMS.getBackend()
+                .listEntries({
+                  collection: 'chapters',
+                  page: 1,
+                  perPage: 100
+                })
+                .then(response => {
+                  // 过滤出属于当前书籍的章节
+                  const chapters = response.entries.filter(entry => {
+                    const data = entry.data;
+                    return data.book === bookSlug;
+                  });
+                  
+                  if (chapters.length === 0) {
+                    container.innerHTML = '<div class="no-chapters">暂无章节，点击右上角"新增章节"按钮添加</div>';
+                    return;
+                  }
+                  
+                  // 获取所有书籍列表，用于章节所属书籍的选择
+                  CMS.getBackend()
+                    .listEntries({
+                      collection: 'books',
+                      page: 1,
+                      perPage: 100
+                    })
+                    .then(booksResponse => {
+                      const allBooks = booksResponse.entries.map(entry => ({
+                        slug: entry.slug,
+                        title: entry.data.title
+                      }));
+                      
+                      // 渲染章节列表
+                      container.innerHTML = '';
+                      chapters.forEach(chapter => {
+                        const item = this.createChapterItem(chapter, allBooks);
+                        container.appendChild(item);
+                      });
+                    });
+                })
+                .catch(error => {
+                  console.error('加载章节失败:', error);
+                  container.innerHTML = '<div class="no-chapters">加载章节失败，请刷新页面重试</div>';
+                });
+            },
+            
+            createChapterItem: function(chapter, allBooks) {
+              const item = document.createElement('li');
+              item.className = 'chapter-item';
+              
+              // 章节信息区域
+              const info = document.createElement('div');
+              info.className = 'chapter-info';
+              
+              const title = document.createElement('h4');
+              title.className = 'chapter-title';
+              title.textContent = chapter.data.title || '无标题';
+              
+              const meta = document.createElement('div');
+              meta.className = 'chapter-meta';
+              
+              const date = new Date(chapter.data.date);
+              meta.innerHTML = `
+                <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('zh-CN')}</span>
+                <span><i class="fas fa-link"></i> ${chapter.slug}</span>
+              `;
+              
+              info.appendChild(title);
+              info.appendChild(meta);
+              
+              // 章节操作区域
+              const actions = document.createElement('div');
+              actions.className = 'chapter-actions';
+              
+              // 书籍选择下拉菜单
+              const bookSelect = document.createElement('select');
+              bookSelect.className = 'book-select';
+              bookSelect.title = '更换所属书籍';
+              
+              allBooks.forEach(book => {
+                const option = document.createElement('option');
+                option.value = book.slug;
+                option.textContent = book.title;
+                option.selected = book.slug === chapter.data.book;
+                bookSelect.appendChild(option);
+              });
+              
+              bookSelect.addEventListener('change', function() {
+                const newBookSlug = this.value;
+                
+                // 获取章节数据
+                CMS.getBackend().getEntry('chapters', chapter.slug).then(entry => {
+                  // 修改书籍字段
+                  const newData = {...entry.data, book: newBookSlug};
+                  
+                  // 更新章节
+                  CMS.getBackend().persistEntry({
+                    collection: 'chapters',
+                    slug: chapter.slug,
+                    data: newData,
+                    assets: entry.assets || []
+                  }).then(() => {
+                    alert('章节所属书籍已更新');
+                  }).catch(error => {
+                    console.error('更新章节失败:', error);
+                    alert('更新章节失败，请刷新页面重试');
+                  });
+                });
+              });
+              
+              // 编辑按钮
+              const editBtn = document.createElement('button');
+              editBtn.className = 'chapter-action-btn edit';
+              editBtn.innerHTML = '<i class="fas fa-edit"></i> 编辑';
+              editBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止事件冒泡
+                window.open(`/admin/#/collections/chapters/entries/${chapter.slug}`, '_blank');
+              });
+              
+              // 删除按钮
+              const deleteBtn = document.createElement('button');
+              deleteBtn.className = 'chapter-action-btn delete';
+              deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+              deleteBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止事件冒泡
+                if (confirm(`确定要删除章节"${chapter.data.title}"吗？此操作不可撤销。`)) {
+                  CMS.getBackend().deleteEntry('chapters', chapter.slug).then(() => {
+                    item.remove();
+                    alert('章节已删除');
+                  }).catch(error => {
+                    console.error('删除章节失败:', error);
+                    alert('删除章节失败，请刷新页面重试');
+                  });
+                }
+              });
+              
+              actions.appendChild(bookSelect);
+              actions.appendChild(editBtn);
+              actions.appendChild(deleteBtn);
+              
+              item.appendChild(info);
+              item.appendChild(actions);
+              
+              return item;
+            }
+          });
+          
+          // 为书籍注册章节管理预览组件
+          CMS.registerPreviewTemplate('books', BookChaptersPreview);
+          
+          // 为章节注册普通预览组件
+          const ChapterPreview = createClass({
             render: function() {
               const {entry, widgetFor} = this.props;
               const md = new markdownit({
@@ -316,23 +944,35 @@
             }
           });
           
-          CMS.registerPreviewTemplate('chapters', MarkdownPreview);
+          CMS.registerPreviewTemplate('chapters', ChapterPreview);
           
-          // 重置编辑器配置，启用中文支持
-          CMS.registerEditorComponent({
-            id: "reset-editor",
-            label: "重置编辑器",
-            fields: [],
-            pattern: /^$/,
-            fromBlock: function() {
-              return {};
-            },
-            toBlock: function() {
-              return "";
-            },
-            toPreview: function() {
-              return "";
-            }
+          // 监听新建章节页面加载，自动填充书籍关联
+          document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function checkForNewChapterForm() {
+              if (window.location.hash.includes('/collections/chapters/new')) {
+                const chapterForm = document.querySelector('form[data-collection="chapters"]');
+                if (chapterForm) {
+                  const parentBook = localStorage.getItem('temp_parent_book');
+                  if (parentBook) {
+                    // 找到书籍选择字段
+                    const bookField = chapterForm.querySelector('[data-field-name="book"] select');
+                    if (bookField) {
+                      // 尝试选择对应的书籍
+                      Array.from(bookField.options).forEach(option => {
+                        if (option.value === parentBook) {
+                          option.selected = true;
+                          bookField.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                      });
+                    }
+                    // 使用后清除
+                    localStorage.removeItem('temp_parent_book');
+                  }
+                } else {
+                  setTimeout(checkForNewChapterForm, 500);
+                }
+              }
+            }, 1000);
           });
           
           // 在初始化后额外添加中文支持
@@ -343,47 +983,597 @@
               editor.style.fontFamily = '"PingFang SC", "Microsoft YaHei", sans-serif';
               logDebug("找到并增强编辑器元素");
             });
-            
-            // 添加富文本工具栏增强
-            const editorContainers = document.querySelectorAll('.nc-entryEditor-entryContent');
-            editorContainers.forEach(container => {
-              const toolbar = document.createElement('div');
-              toolbar.className = 'rich-text-toolbar';
-              toolbar.innerHTML = `
-                <button title="插入图片" data-action="image"><i class="fas fa-image"></i> 图片</button>
-                <button title="插入表格" data-action="table"><i class="fas fa-table"></i> 表格</button>
-                <div class="separator"></div>
-                <button title="粗体" data-action="bold"><i class="fas fa-bold"></i> 粗体</button>
-                <button title="斜体" data-action="italic"><i class="fas fa-italic"></i> 斜体</button>
-                <button title="引用" data-action="quote"><i class="fas fa-quote-left"></i> 引用</button>
-                <div class="separator"></div>
-                <button title="有序列表" data-action="ordered-list"><i class="fas fa-list-ol"></i> 有序列表</button>
-                <button title="无序列表" data-action="unordered-list"><i class="fas fa-list-ul"></i> 无序列表</button>
-              `;
+          }, 2000);
+          
+          // 添加直接的DOM操作方案，确保章节管理界面显示
+          setTimeout(function() {
+            // 检查是否在书籍编辑页面
+            if (window.location.hash.includes('/collections/books/entries/')) {
+              console.log('检测到书籍编辑页面，尝试插入章节管理界面');
               
-              // 如果容器中存在编辑器，则添加工具栏
-              const editorArea = container.querySelector('.css-wcxeq8-WidgetControlNotSelected, .cm-s-easymde');
-              if (editorArea && !container.querySelector('.rich-text-toolbar')) {
-                container.insertBefore(toolbar, editorArea);
+              // 添加固定的章节控制面板
+              function addFixedChapterControl() {
+                // 检查是否已存在
+                if (document.querySelector('.fixed-chapter-control')) {
+                  return;
+                }
                 
-                // 添加工具栏按钮点击事件
-                toolbar.querySelectorAll('button').forEach(button => {
-                  button.addEventListener('click', function() {
-                    const action = this.getAttribute('data-action');
-                    // 在这里处理各种编辑器操作
-                    logDebug(`执行编辑器操作: ${action}`);
+                // 查找书籍slug
+                const slugInput = document.querySelector('form[data-collection="books"] input[name="slug"]');
+                if (!slugInput) {
+                  console.log('未找到slug输入框，无法添加章节控制面板');
+                  return;
+                }
+                
+                const bookSlug = slugInput.value;
+                
+                // 创建固定控制面板
+                const controlPanel = document.createElement('div');
+                controlPanel.className = 'fixed-chapter-control';
+                
+                // 添加章节按钮
+                const addBtn = document.createElement('button');
+                addBtn.className = 'chapter-control-btn add';
+                addBtn.innerHTML = '<i class="fas fa-plus"></i><span class="control-label">新增章节</span>';
+                addBtn.title = '新增章节';
+                addBtn.onclick = function() {
+                  localStorage.setItem('temp_parent_book', bookSlug);
+                  window.open('/admin/#/collections/chapters/new', '_blank');
+                };
+                
+                // 查看章节列表按钮
+                const listBtn = document.createElement('button');
+                listBtn.className = 'chapter-control-btn list';
+                listBtn.innerHTML = '<i class="fas fa-list"></i><span class="control-label">查看章节列表</span>';
+                listBtn.title = '查看章节列表';
+                listBtn.onclick = function() {
+                  showChaptersModal(bookSlug);
+                };
+                
+                // 管理章节按钮
+                const manageBtn = document.createElement('button');
+                manageBtn.className = 'chapter-control-btn';
+                manageBtn.innerHTML = '<i class="fas fa-cog"></i><span class="control-label">管理章节</span>';
+                manageBtn.title = '管理章节';
+                manageBtn.onclick = function() {
+                  // 滚动到章节管理区域
+                  const chaptersManager = document.querySelector('.book-chapters-manager');
+                  if (chaptersManager) {
+                    chaptersManager.scrollIntoView({ behavior: 'smooth' });
+                  }
+                };
+                
+                // 添加按钮到控制面板
+                controlPanel.appendChild(addBtn);
+                controlPanel.appendChild(listBtn);
+                controlPanel.appendChild(manageBtn);
+                
+                // 添加到文档
+                document.body.appendChild(controlPanel);
+              }
+              
+              // 显示章节列表弹窗
+              function showChaptersModal(bookSlug) {
+                // 检查是否已存在
+                let modal = document.querySelector('.chapters-modal');
+                if (!modal) {
+                  // 创建弹窗
+                  modal = document.createElement('div');
+                  modal.className = 'chapters-modal';
+                  
+                  const modalContent = document.createElement('div');
+                  modalContent.className = 'chapters-modal-content';
+                  
+                  // 弹窗标题栏
+                  const header = document.createElement('div');
+                  header.className = 'chapters-modal-header';
+                  
+                  const title = document.createElement('h3');
+                  title.className = 'chapters-modal-title';
+                  title.textContent = '章节列表';
+                  
+                  const closeBtn = document.createElement('button');
+                  closeBtn.className = 'close-modal';
+                  closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                  closeBtn.onclick = function() {
+                    modal.classList.remove('active');
+                  };
+                  
+                  header.appendChild(title);
+                  header.appendChild(closeBtn);
+                  
+                  // 弹窗搜索栏
+                  const searchDiv = document.createElement('div');
+                  searchDiv.className = 'chapter-search';
+                  
+                  const searchInput = document.createElement('input');
+                  searchInput.type = 'text';
+                  searchInput.placeholder = '搜索章节...';
+                  searchInput.onkeyup = function() {
+                    const term = this.value.toLowerCase();
+                    const items = document.querySelectorAll('.modal-chapter-item');
                     
-                    // TODO: 实现对应的编辑器操作
+                    items.forEach(item => {
+                      const title = item.querySelector('.chapter-title').textContent.toLowerCase();
+                      if (title.includes(term)) {
+                        item.style.display = '';
+                      } else {
+                        item.style.display = 'none';
+                      }
+                    });
+                  };
+                  
+                  searchDiv.appendChild(searchInput);
+                  
+                  // 弹窗章节列表区域
+                  const body = document.createElement('div');
+                  body.className = 'chapters-modal-body';
+                  
+                  // 组装弹窗
+                  modalContent.appendChild(header);
+                  modalContent.appendChild(searchDiv);
+                  modalContent.appendChild(body);
+                  
+                  modal.appendChild(modalContent);
+                  document.body.appendChild(modal);
+                  
+                  // 点击遮罩关闭弹窗
+                  modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                      this.classList.remove('active');
+                    }
+                  });
+                }
+                
+                // 清空章节列表
+                const modalBody = modal.querySelector('.chapters-modal-body');
+                modalBody.innerHTML = '<div style="padding: 20px; text-align: center;">正在加载章节...</div>';
+                
+                // 显示弹窗
+                modal.classList.add('active');
+                
+                // 加载章节数据
+                loadChaptersForModal(bookSlug, modalBody);
+              }
+              
+              // 为弹窗加载章节数据
+              function loadChaptersForModal(bookSlug, container) {
+                if (!bookSlug) {
+                  container.innerHTML = '<div style="padding: 30px; text-align: center; color: #888;">请先保存书籍，或输入书籍标识</div>';
+                  return;
+                }
+                
+                // 获取所有章节
+                CMS.getBackend()
+                  .listEntries({
+                    collection: 'chapters',
+                    page: 1,
+                    perPage: 100
+                  })
+                  .then(response => {
+                    // 过滤出属于当前书籍的章节
+                    const chapters = response.entries.filter(entry => {
+                      return entry.data.book === bookSlug;
+                    });
+                    
+                    if (chapters.length === 0) {
+                      container.innerHTML = '<div style="padding: 30px; text-align: center; color: #888;">暂无章节，点击"新增章节"按钮添加</div>';
+                      return;
+                    }
+                    
+                    // 创建章节列表
+                    const list = document.createElement('ul');
+                    list.className = 'book-chapters-list';
+                    list.style.cssText = 'list-style: none; margin: 0; padding: 0;';
+                    
+                    // 按日期降序排序章节
+                    chapters.sort((a, b) => {
+                      return new Date(b.data.date) - new Date(a.data.date);
+                    });
+                    
+                    // 渲染章节列表
+                    chapters.forEach(chapter => {
+                      const item = document.createElement('li');
+                      item.className = 'chapter-item modal-chapter-item';
+                      item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #eee; cursor: pointer;';
+                      
+                      // 点击整个项目进入编辑页面
+                      item.addEventListener('click', function() {
+                        window.open(`/admin/#/collections/chapters/entries/${chapter.slug}`, '_blank');
+                      });
+                      
+                      // 章节信息
+                      const info = document.createElement('div');
+                      info.style.cssText = 'flex: 1;';
+                      
+                      const title = document.createElement('h4');
+                      title.className = 'chapter-title';
+                      title.style.cssText = 'font-size: 15px; font-weight: 500; color: #333; margin: 0 0 5px 0;';
+                      title.textContent = chapter.data.title || '无标题';
+                      
+                      const meta = document.createElement('div');
+                      meta.style.cssText = 'font-size: 13px; color: #888; display: flex; gap: 15px;';
+                      
+                      const date = new Date(chapter.data.date);
+                      meta.innerHTML = `
+                        <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('zh-CN')}</span>
+                        <span><i class="fas fa-link"></i> ${chapter.slug}</span>
+                      `;
+                      
+                      info.appendChild(title);
+                      info.appendChild(meta);
+                      
+                      // 操作按钮
+                      const actions = document.createElement('div');
+                      actions.style.cssText = 'display: flex; gap: 8px;';
+                      
+                      // 编辑按钮
+                      const editBtn = document.createElement('button');
+                      editBtn.className = 'chapter-action-btn edit';
+                      editBtn.style.cssText = 'background: #edf5ff; color: #3a69c7; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 13px;';
+                      editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                      editBtn.onclick = function(e) {
+                        e.stopPropagation(); // 防止事件冒泡
+                        window.open(`/admin/#/collections/chapters/entries/${chapter.slug}`, '_blank');
+                      };
+                      
+                      // 删除按钮
+                      const deleteBtn = document.createElement('button');
+                      deleteBtn.className = 'chapter-action-btn delete';
+                      deleteBtn.style.cssText = 'background: #fff1f0; color: #cf1322; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 13px;';
+                      deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                      deleteBtn.onclick = function(e) {
+                        e.stopPropagation(); // 防止事件冒泡
+                        if (confirm(`确定要删除章节"${chapter.data.title}"吗？此操作不可撤销。`)) {
+                          CMS.getBackend().deleteEntry('chapters', chapter.slug).then(() => {
+                            item.remove();
+                            alert('章节已删除');
+                          }).catch(error => {
+                            console.error('删除章节失败:', error);
+                            alert('删除章节失败，请刷新页面重试');
+                          });
+                        }
+                      };
+                      
+                      actions.appendChild(editBtn);
+                      actions.appendChild(deleteBtn);
+                      
+                      item.appendChild(info);
+                      item.appendChild(actions);
+                      list.appendChild(item);
+                    });
+                    
+                    // 清空容器并添加列表
+                    container.innerHTML = '';
+                    container.appendChild(list);
+                  })
+                  .catch(error => {
+                    console.error('加载章节失败:', error);
+                    container.innerHTML = '<div style="padding: 30px; text-align: center; color: red;">加载章节失败，请刷新页面重试</div>';
+                  });
+              }
+              
+              function insertChapterManager() {
+                // 查找预览窗格
+                const previewPane = document.querySelector('.nc-entryEditor-previewPane');
+                if (!previewPane) {
+                  console.log('未找到预览窗格，500ms后重试');
+                  setTimeout(insertChapterManager, 500);
+                  return;
+                }
+                
+                console.log('找到预览窗格，准备插入章节管理界面');
+                
+                // 查找书籍slug
+                const slugInput = document.querySelector('form[data-collection="books"] input[name="slug"]');
+                if (!slugInput) {
+                  console.log('未找到slug输入框，显示默认内容');
+                  previewPane.innerHTML = '<div style="padding: 20px; background: white; border-radius: 6px;"><h3>无法获取书籍信息</h3><p>请先保存书籍，或刷新页面</p></div>';
+                  return;
+                }
+                
+                const bookSlug = slugInput.value;
+                
+                // 创建章节管理界面
+                const chaptersManager = document.createElement('div');
+                chaptersManager.className = 'book-chapters-manager';
+                chaptersManager.style.cssText = 'margin: 20px; background: white; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+                
+                // 创建标题栏
+                const header = document.createElement('div');
+                header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f5f7fa; border-bottom: 1px solid #eee;';
+                
+                const title = document.createElement('h3');
+                title.style.cssText = 'font-size: 16px; font-weight: bold; color: #333; margin: 0;';
+                title.textContent = '章节管理';
+                
+                const addBtn = document.createElement('button');
+                addBtn.className = 'add-chapter-btn';
+                addBtn.style.cssText = 'background: #3a69c7; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 5px;';
+                addBtn.innerHTML = '<i class="fas fa-plus"></i> 新增章节';
+                addBtn.onclick = function() {
+                  localStorage.setItem('temp_parent_book', bookSlug);
+                  window.open('/admin/#/collections/chapters/new', '_blank');
+                };
+                
+                header.appendChild(title);
+                header.appendChild(addBtn);
+                chaptersManager.appendChild(header);
+                
+                // 创建章节列表容器
+                const chaptersList = document.createElement('div');
+                chaptersList.className = 'chapters-list';
+                chaptersList.style.cssText = 'padding: 0; margin: 0;';
+                chaptersManager.appendChild(chaptersList);
+                
+                // 清空预览区域并添加管理器
+                previewPane.innerHTML = '';
+                previewPane.appendChild(chaptersManager);
+                
+                // 加载章节数据
+                loadChapters(bookSlug, chaptersList);
+                
+                // 添加slug变化监听
+                slugInput.addEventListener('change', function() {
+                  loadChapters(this.value, chaptersList);
+                });
+                
+                // 检查是否已存在固定控制面板，如果不存在则添加
+                if (!document.querySelector('.fixed-chapter-control')) {
+                  addFixedChapterControl();
+                }
+              }
+              
+              // 加载章节数据
+              function loadChapters(bookSlug, container) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center;">正在加载章节...</div>';
+                
+                if (!bookSlug) {
+                  container.innerHTML = '<div style="padding: 30px; text-align: center; color: #888;">请先保存书籍，或输入书籍标识</div>';
+                  return;
+                }
+                
+                // 获取所有章节
+                CMS.getBackend()
+                  .listEntries({
+                    collection: 'chapters',
+                    page: 1,
+                    perPage: 100
+                  })
+                  .then(response => {
+                    // 过滤出属于当前书籍的章节
+                    const chapters = response.entries.filter(entry => {
+                      return entry.data.book === bookSlug;
+                    });
+                    
+                    if (chapters.length === 0) {
+                      container.innerHTML = `
+                        <div style="padding: 30px; text-align: center; color: #888;">
+                          <p>暂无章节</p>
+                          <button class="add-chapter-btn" style="margin-top: 15px; background: #3a69c7; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                            <i class="fas fa-plus"></i> 新增章节
+                          </button>
+                        </div>
+                      `;
+                      
+                      // 为空状态下的添加按钮添加事件
+                      const emptyAddBtn = container.querySelector('.add-chapter-btn');
+                      if (emptyAddBtn) {
+                        emptyAddBtn.addEventListener('click', function() {
+                          localStorage.setItem('temp_parent_book', bookSlug);
+                          window.open('/admin/#/collections/chapters/new', '_blank');
+                        });
+                      }
+                      return;
+                    }
+                    
+                    // 获取所有书籍列表
+                    CMS.getBackend()
+                      .listEntries({
+                        collection: 'books',
+                        page: 1, 
+                        perPage: 100
+                      })
+                      .then(booksResponse => {
+                        const allBooks = booksResponse.entries.map(entry => ({
+                          slug: entry.slug,
+                          title: entry.data.title
+                        }));
+                        
+                        // 渲染章节列表
+                        container.innerHTML = '';
+                        chapters.forEach(chapter => {
+                          const item = createChapterItem(chapter, allBooks);
+                          container.appendChild(item);
+                        });
+                      });
+                  })
+                  .catch(error => {
+                    console.error('加载章节失败:', error);
+                    container.innerHTML = '<div style="padding: 30px; text-align: center; color: red;">加载章节失败，请刷新页面重试</div>';
+                  });
+              }
+              
+              // 创建章节列表项
+              function createChapterItem(chapter, allBooks) {
+                const item = document.createElement('div');
+                item.className = 'chapter-item';
+                item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #eee; cursor: pointer;';
+                
+                // 点击整个章节项进入编辑页面
+                item.addEventListener('click', function() {
+                  window.open(`/admin/#/collections/chapters/entries/${chapter.slug}`, '_blank');
+                });
+                
+                // 章节信息区域
+                const info = document.createElement('div');
+                info.style.cssText = 'flex: 1;';
+                
+                const title = document.createElement('h4');
+                title.className = 'chapter-title';
+                title.style.cssText = 'font-size: 15px; font-weight: 500; color: #333; margin: 0 0 5px 0; cursor: pointer;';
+                title.textContent = chapter.data.title || '无标题';
+                
+                const meta = document.createElement('div');
+                meta.style.cssText = 'font-size: 13px; color: #888; display: flex; gap: 15px;';
+                
+                const date = new Date(chapter.data.date);
+                meta.innerHTML = `
+                  <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('zh-CN')}</span>
+                  <span><i class="fas fa-link"></i> ${chapter.slug}</span>
+                `;
+                
+                info.appendChild(title);
+                info.appendChild(meta);
+                
+                // 章节操作区域
+                const actions = document.createElement('div');
+                actions.style.cssText = 'display: flex; gap: 8px;';
+                
+                // 书籍选择下拉菜单
+                const bookSelect = document.createElement('select');
+                bookSelect.className = 'book-select';
+                bookSelect.style.cssText = 'padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; max-width: 150px;';
+                bookSelect.title = '更换所属书籍';
+                
+                allBooks.forEach(book => {
+                  const option = document.createElement('option');
+                  option.value = book.slug;
+                  option.textContent = book.title;
+                  option.selected = book.slug === chapter.data.book;
+                  bookSelect.appendChild(option);
+                });
+                
+                bookSelect.addEventListener('change', function(e) {
+                  e.stopPropagation(); // 防止事件冒泡
+                  const newBookSlug = this.value;
+                  updateChapterBook(chapter.slug, newBookSlug, item);
+                });
+                
+                // 编辑按钮
+                const editBtn = document.createElement('button');
+                editBtn.className = 'chapter-action-btn edit';
+                editBtn.style.cssText = 'background: #edf5ff; color: #3a69c7; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px;';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> 编辑';
+                editBtn.onclick = function(e) {
+                  e.stopPropagation(); // 防止事件冒泡
+                  window.open(`/admin/#/collections/chapters/entries/${chapter.slug}`, '_blank');
+                };
+                
+                // 删除按钮
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'chapter-action-btn delete';
+                deleteBtn.style.cssText = 'background: #fff1f0; color: #cf1322; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px;';
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+                deleteBtn.onclick = function(e) {
+                  e.stopPropagation(); // 防止事件冒泡
+                  if (confirm(`确定要删除章节"${chapter.data.title}"吗？此操作不可撤销。`)) {
+                    deleteChapter(chapter.slug, item);
+                  }
+                };
+                
+                actions.appendChild(bookSelect);
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                
+                item.appendChild(info);
+                item.appendChild(actions);
+                
+                return item;
+              }
+              
+              // 更新章节所属书籍
+              function updateChapterBook(chapterSlug, newBookSlug, itemElement) {
+                // 获取章节数据
+                CMS.getBackend().getEntry('chapters', chapterSlug).then(entry => {
+                  // 修改书籍字段
+                  const newData = {...entry.data, book: newBookSlug};
+                  
+                  // 更新章节
+                  CMS.getBackend().persistEntry({
+                    collection: 'chapters',
+                    slug: chapterSlug,
+                    data: newData,
+                    assets: entry.assets || []
+                  }).then(() => {
+                    alert('章节所属书籍已更新');
+                    // 如果章节不再属于当前书籍，移除它
+                    const currentBookSlug = document.querySelector('form[data-collection="books"] input[name="slug"]').value;
+                    if (newBookSlug !== currentBookSlug) {
+                      itemElement.style.display = 'none';
+                    }
+                  }).catch(error => {
+                    console.error('更新章节失败:', error);
+                    alert('更新章节失败，请刷新页面重试');
                   });
                 });
               }
+              
+              // 删除章节
+              function deleteChapter(chapterSlug, itemElement) {
+                CMS.getBackend().deleteEntry('chapters', chapterSlug).then(() => {
+                  // 从DOM中移除
+                  itemElement.style.display = 'none';
+                  alert('章节已删除');
+                }).catch(error => {
+                  console.error('删除章节失败:', error);
+                  alert('删除章节失败，请刷新页面重试');
+                });
+              }
+              
+              // 开始插入章节管理界面
+              insertChapterManager();
+              
+              // 添加固定章节控制面板
+              addFixedChapterControl();
+            }
+            
+            // 监听URL变化，处理页面导航
+            let lastUrl = location.href; 
+            const urlObserver = new MutationObserver(() => {
+              const url = location.href;
+              if (url !== lastUrl) {
+                lastUrl = url;
+                if (url.includes('/collections/books/entries/')) {
+                  console.log('URL变化到书籍编辑页面，尝试插入章节管理界面');
+                  setTimeout(insertChapterManager, 500);
+                  setTimeout(addFixedChapterControl, 500);
+                }
+              }
             });
-          }, 2000);
+            
+            urlObserver.observe(document, { subtree: true, childList: true });
+            
+          }, 1000);
           
         } catch (e) {
           logDebug("CMS 错误: " + e.message, true);
         }
       }
+    });
+  </script>
+
+  <!-- 增强功能的通知 -->
+  <div id="custom-notification" style="display:none; position:fixed; bottom:20px; right:20px; background:#3a69c7; color:white; padding:10px 15px; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.2); z-index:9999;">
+    富文本编辑器已增强，现已支持图片插入、格式化粘贴和更多格式
+  </div>
+  
+  <script>
+    // 显示通知
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var notification = document.getElementById('custom-notification');
+        if (notification) {
+          notification.style.display = 'block';
+          setTimeout(function() {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s';
+            setTimeout(function() {
+              notification.style.display = 'none';
+            }, 500);
+          }, 5000);
+        }
+      }, 2000);
     });
   </script>
 </body>

@@ -1,6 +1,6 @@
 backend:
-  name: github
-  repo: crazyoldmanll/time-recording  # 替换为你实际的GitHub用户名和仓库名
+  name: git-gateway
+  local_backend: true
   branch: main
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
@@ -21,22 +21,41 @@ logo_url: http://localhost:1313/images/logo.png
 
 publish_mode: editorial_workflow
 
-media_folder: "static/images/chapter-thumbs"
-public_folder: "/images/chapter-thumbs"
+# 媒体库配置 - 改进媒体管理
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+media_library:
+  name: uploadcare
+  config:
+    publicKey: "demopublickey" # 请替换为您的uploadcare key
+    multiple: true
+    tabs: "file url camera gdrive gphotos"
+    effects: "crop,rotate,enhance,sharp,blur"
+    imageShrink: "2000x2000"
+    previewStep: true
+    clearable: true
 
-# Markdown编辑器配置 - 关键修改：设置为textwidget类型解决中文输入问题
+# Markdown编辑器高级配置
 editor:
   preview: true
+  frame: true # 启用框架模式，更好的编辑体验
 
-# 重要：配置Markdown编辑器
+# 增强的Markdown编辑器配置
 markdown:
   default_mode: 'rich_text'
   frontmatter_delimiter: ['---', '---']
   show_raw: true
-  editor_components: ['image', 'code-block', 'quote', 'bulleted-list', 'numbered-list', 'table']
-  toolbar_buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 
-                 'heading-three', 'heading-four', 'heading-five', 'heading-six',
-                 'quote', 'bulleted-list', 'numbered-list']
+  editor_components: [
+    'image', 'code-block', 'quote', 'bulleted-list', 
+    'numbered-list', 'table', 'enhanced-image', 
+    'advanced-table', 'styled-text', 'font-style'
+  ]
+  toolbar_buttons: [
+    'bold', 'italic', 'strikethrough', 'code', 'link', 
+    'heading-one', 'heading-two', 'heading-three', 'heading-four', 'heading-five', 'heading-six',
+    'quote', 'bulleted-list', 'numbered-list', 'insert-image', 'table', 
+    'undo', 'redo', 'formatting', 'horizontal-rule', 'indent', 'outdent'
+  ]
 
 # slug配置
 slug:
@@ -61,13 +80,6 @@ collections:
       - { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
       - { label: "描述", name: "description", widget: "string", required: false, hint: "书籍简短描述" }
       - { label: "封面", name: "cover", widget: "image", required: false, hint: "书籍封面图片" }
-      - { 
-          label: "正文", 
-          name: "body", 
-          widget: "text",
-          default: "书籍介绍内容...",
-          hint: "书籍详细介绍"
-        }
 
   - name: "chapters"
     label: "章节"
@@ -92,9 +104,32 @@ collections:
       - { 
           label: "正文", 
           name: "body", 
-          widget: "text",
-          default: "这里可以输入文章内容...",
-          hint: "支持图文混排，可以粘贴保留格式的文本"
+          widget: "markdown",
+          buttons: [
+            'bold', 'italic', 'strikethrough', 'code', 'link', 
+            'heading-one', 'heading-two', 'heading-three', 'heading-four',
+            'quote', 'bulleted-list', 'numbered-list'
+          ],
+          editor_components: [
+            'image', 'enhanced-image', 'code-block', 'quote', 
+            'bulleted-list', 'numbered-list', 'advanced-table',
+            'styled-text', 'font-style'
+          ],
+          media_library: {
+            config: {
+              multiple: true
+            }
+          },
+          editor_settings: {
+            auto_save: true,
+            auto_save_delay: 5000, 
+            spell_check: true,
+            line_numbers: false,
+            line_wrapping: true,
+            preview_styles: ["fontFamily", "fontSize", "color"]
+          },
+          default: "在这里编写章节内容...",
+          hint: "支持图文混排，可以粘贴保留格式的文本，使用Ctrl+Shift+V保留格式粘贴"
         }
 
   - name: "settings"

@@ -1,0 +1,14 @@
+[params]
+  # 站点参数
+  mainSections = ["chapters", "books"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[content]
+  [content.types]
+    [content.types."books"]
+      # 设置书籍类型不需要正文
+      emptyBodyWarning = false 

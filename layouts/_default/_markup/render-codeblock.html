@@ -1,0 +1,15 @@
+{{ $lang := .Lang }}
+{{ if not $lang }}
+  {{ if .Attributes.lang }}
+    {{ $lang = .Attributes.lang }}
+  {{ end }}
+{{ end }}
+
+{{ $content := .Inner }}
+
+<!-- 检查是否可能是误识别为代码块的普通中文文本 -->
+{{ if and (eq $lang "") (not (findRE "<[^>]+>" $content)) (findRE "[\u4e00-\u9fa5]" $content) }}
+  <p>{{ $content | safeHTML }}</p>
+{{ else }}
+  <pre><code{{ with $lang }} class="language-{{ . }}"{{ end }}>{{ $content }}</code></pre>
+{{ end }} 

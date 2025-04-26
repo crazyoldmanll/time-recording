@@ -1,0 +1,190 @@
+{{ define "title" }}联系我 - {{ .Site.Title }}{{ end }}
+
+{{ define "main" }}
+<section class="contact-page">
+  <div class="container">
+    <h1 class="page-title">联系我</h1>
+    
+    <div class="contact-content">
+      <div class="contact-info">
+        <h3>让我们保持联系</h3>
+        <p>无论是对故事的感想、建议，还是合作意向，都欢迎与我交流。</p>
+        <ul class="contact-list">
+          <li><i class="fas fa-envelope"></i> <a href="mailto:example@domain.com">example@domain.com</a></li>
+          <li><i class="fab fa-weixin"></i> <span>微信号：yourwechat</span></li>
+          <li><i class="fab fa-weibo"></i> <a href="https://weibo.com/u/yourweibo">@你的微博</a></li>
+        </ul>
+      </div>
+      <div class="contact-form">
+        <form id="contact-form" name="contact" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="contact">
+          <div class="form-group">
+            <label for="name">您的姓名</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">电子邮箱</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="message">留言内容</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="submit-button">发送留言</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 联系页样式 */
+  .contact-page {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+  }
+
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #333;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+  }
+
+  .page-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #3a69c7;
+  }
+
+  .contact-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+    margin-top: 40px;
+  }
+
+  .contact-info {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    min-width: 300px;
+  }
+
+  .contact-info h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .contact-info p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .contact-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+
+  .contact-list i {
+    width: 30px;
+    font-size: 18px;
+    color: #3a69c7;
+  }
+
+  .contact-list a {
+    color: #3a69c7;
+    text-decoration: none;
+  }
+
+  .contact-list a:hover {
+    text-decoration: underline;
+  }
+
+  .contact-form {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    min-width: 300px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #3a69c7;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(58, 105, 199, 0.1);
+  }
+
+  .submit-button {
+    background: #3a69c7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .submit-button:hover {
+    background: #2a59b7;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .contact-content {
+      flex-direction: column;
+    }
+    
+    .contact-info, .contact-form {
+      flex: auto;
+    }
+  }
+</style>
+{{ end }} 

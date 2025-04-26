@@ -1,0 +1,6 @@
+{{ $content := .Inner }}
+{{ if findRE "[\u4e00-\u9fa5]" $content }}
+  {{ $content }}
+{{ else }}
+  <code>{{ $content }}</code>
+{{ end }} 

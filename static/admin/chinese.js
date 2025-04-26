@@ -52,7 +52,7 @@
       }
       
       // 处理直接模式的文本编辑器区域
-      const textareas = document.querySelectorAll('.widget-text textarea, textarea[name="body"]');
+      const textareas = document.querySelectorAll('.widget-text textarea, textarea[name="body"]:not([data-collection="books"])');
       textareas.forEach(enhanceTextArea);
       
       // 处理直接模式的markdown编辑区域
