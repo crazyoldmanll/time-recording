@@ -1,6 +1,5 @@
 backend:
   name: git-gateway
-  local_backend: true
   branch: main
   repo: crazyoldmanll/time-recording
   commit_messages:
