@@ -2,7 +2,7 @@ backend:
   name: git-gateway
   local_backend: true
   branch: main
-  repo：crazyoldmanll/time-recording
+  repo: crazyoldmanll/time-recording
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
     update: '更新 {{collection}} "{{slug}}"'
