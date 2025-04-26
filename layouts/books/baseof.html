@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{{ block "title" . }}{{ .Title }} — {{ .Site.Title }}{{ end }}</title>
   <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
-  <link rel="stylesheet" href="{{ "/css/no-footer.css" | relURL }}" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
-<body class="section-{{ .Section }}">
+<body>
   {{ partial "header.html" . }}
   {{ block "main" . }}{{ end }}
-  {{ partial "footer.html" . }}
+  <!-- 移除了页脚部分 -->
   <script src="{{ "/js/main.js" | relURL }}"></script>
 </body>
-</html>
-
+</html> 

@@ -15,3 +15,10 @@ disableKinds: ["taxonomy", "term"]
 # 让 Hugo 处理 .yaml 数据
 dataDir: data
 
+# 指定内容类型的布局模板
+params:
+  books:
+    layout: "books/baseof"
+  chapters:
+    layout: "chapters/baseof"
+

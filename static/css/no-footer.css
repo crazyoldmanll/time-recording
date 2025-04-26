@@ -1,0 +1,15 @@
+/* 
+ * 隐藏特定页面上的页脚
+ * 应用于书籍和章节页面
+ */
+
+body.section-books footer.site-footer,
+body.section-chapters footer.site-footer {
+  display: none !important;
+}
+
+/* 页脚隐藏后，增加页面底部间距 */
+body.section-books main,
+body.section-chapters main {
+  margin-bottom: 50px;
+} 

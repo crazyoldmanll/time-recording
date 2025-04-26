@@ -2,6 +2,7 @@ backend:
   name: git-gateway
   local_backend: true
   branch: main
+  repo：crazyoldmanll/time-recording
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
     update: '更新 {{collection}} "{{slug}}"'
@@ -105,28 +106,11 @@ collections:
           label: "正文", 
           name: "body", 
           widget: "markdown",
-          buttons: [
-            'bold', 'italic', 'strikethrough', 'code', 'link', 
-            'heading-one', 'heading-two', 'heading-three', 'heading-four',
-            'quote', 'bulleted-list', 'numbered-list'
-          ],
-          editor_components: [
-            'image', 'enhanced-image', 'code-block', 'quote', 
-            'bulleted-list', 'numbered-list', 'advanced-table',
-            'styled-text', 'font-style'
-          ],
+          editor_components: ["image", "code-block", "quote"],
           media_library: {
             config: {
               multiple: true
             }
-          },
-          editor_settings: {
-            auto_save: true,
-            auto_save_delay: 5000, 
-            spell_check: true,
-            line_numbers: false,
-            line_wrapping: true,
-            preview_styles: ["fontFamily", "fontSize", "color"]
           },
           default: "在这里编写章节内容...",
           hint: "支持图文混排，可以粘贴保留格式的文本，使用Ctrl+Shift+V保留格式粘贴"
@@ -146,4 +130,3 @@ collections:
               - { label: "ID", name: "id", widget: "string" }
               - { label: "标题", name: "title", widget: "string" }
               - { label: "缩略图", name: "thumb", widget: "string" }
-
