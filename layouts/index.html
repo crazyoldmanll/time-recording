@@ -14,7 +14,8 @@
       <div class="logo"><a href="/">{{ .Site.Title }}</a></div>
       <nav class="main-nav">
         <a href="#about"><i class="fas fa-user"></i> 关于</a>
-        <a href="#chapters"><i class="fas fa-book-open"></i> 章节</a>
+        <a href="#chapters"><i class="fas fa-book-open"></i> 书籍</a>
+        <a href="/books/"><i class="fas fa-book"></i> 全部书籍</a>
         <a href="#contact"><i class="fas fa-envelope"></i> 联系</a>
       </nav>
     </div>
@@ -44,68 +45,335 @@
 
   <main class="chapters-section" id="chapters">
     <div class="container">
-      <h2 class="section-title"><span>章节目录</span></h2>
-      <div class="content-layout">
-        <aside class="chapter-nav">
-          <div class="nav-container">
-            <h3>目录导航</h3>
-            <ul>
-              {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
-              {{ range $i, $chap := $chapters }}
-              <li data-chapter="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="{{ if eq $i 0 }}active{{ end }}">
-                <div class="chapter-nav-item">
-                  <div class="thumb">
-                    <img src="{{ with $chap.Params.thumb }}{{ . }}{{ else }}/images/default-thumb.png{{ end }}" alt="{{ $chap.Title }}">
-                    <span class="chapter-number">{{ add $i 1 }}</span>
-                  </div>
-                  <div class="chapter-meta">
-                    <span class="chapter-title">{{ $chap.Title }}</span>
-                    <span class="chapter-date">{{ $chap.Date.Format "2006-01-02" }}</span>
-                  </div>
-                </div>
+      <h2 class="section-title"><span>书籍目录</span></h2>
+      
+      <div class="books-showcase">
+        {{ $books := where .Site.Pages "Section" "books" }}
+        {{ $regularBooks := where $books "Kind" "page" }}
+        {{ if gt (len $regularBooks) 0 }}
+        <div class="books-layout">
+          <div class="books-sidebar">
+            <h3>全部书籍</h3>
+            <ul class="books-list">
+              {{ range $index, $book := $regularBooks }}
+              <li class="book-item {{ if eq $index 0 }}active{{ end }}" data-book-id="{{ $book.File.BaseFileName }}">
+                <a href="javascript:void(0);" class="book-nav-link">{{ $book.Title }}</a>
               </li>
               {{ end }}
             </ul>
+            <div class="all-books-link">
+              <a href="/books/" class="view-all-link">查看全部书籍 <i class="fas fa-arrow-right"></i></a>
+            </div>
           </div>
-        </aside>
-
-        <section class="content-area">
-          {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
-          {{ range $i, $chap := $chapters }}
-          <article id="{{ with $chap.Params.id }}{{ . }}{{ else }}{{ $chap.File.BaseFileName }}{{ end }}" class="chapter-content{{ if eq $i 0 }} visible{{ end }}">
-            <div class="chapter-header">
-              <h2>{{ $chap.Title }}</h2>
-              <div class="chapter-meta">
-                <span class="date"><i class="far fa-calendar-alt"></i> {{ $chap.Date.Format "2006-01-02" }}</span>
-                <span class="reading-time"><i class="far fa-clock"></i> {{ div (countwords $chap.Content) 200 }}分钟阅读</span>
+          
+          <div class="books-content">
+            {{ range $index, $book := $regularBooks }}
+            <div class="book-detail{{ if eq $index 0 }} active{{ end }}" id="book-{{ $book.File.BaseFileName }}">
+              <div class="book-header">
+                <div class="book-cover">
+                  <img src="{{ with $book.Params.cover }}{{ . }}{{ else }}/images/default-thumb.png{{ end }}" alt="{{ $book.Title }}">
+                </div>
+                <div class="book-info">
+                  <h3 class="book-title">{{ $book.Title }}</h3>
+                  <p class="book-desc">{{ with $book.Params.description }}{{ . }}{{ else }}{{ $book.Summary }}{{ end }}</p>
+                  <div class="book-meta">
+                    {{ $bookID := $book.File.BaseFileName }}
+                    {{ $chapters := where .Site.RegularPages "Params.book" $bookID }}
+                    <span class="chapters-count"><i class="fas fa-book-open"></i> {{ len $chapters }} 章节</span>
+                    <span class="date"><i class="far fa-calendar-alt"></i> {{ $book.Date.Format "2006-01-02" }}</span>
+                  </div>
+                  <div class="book-actions">
+                    <a href="{{ $book.RelPermalink }}" class="book-read-btn">查看详情 <i class="fas fa-arrow-right"></i></a>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="book-chapters">
+                <h4>最新章节</h4>
+                {{ $bookID := $book.File.BaseFileName }}
+                {{ $chapters := where .Site.RegularPages "Params.book" $bookID }}
+                {{ if $chapters }}
+                  <ul class="chapters-preview">
+                    {{ range first 3 $chapters.ByDate.Reverse }}
+                    <li class="chapter-preview-item">
+                      <a href="{{ .RelPermalink }}" class="chapter-link">
+                        <span class="chapter-title">{{ .Title }}</span>
+                        <span class="chapter-date">{{ .Date.Format "2006-01-02" }}</span>
+                      </a>
+                    </li>
+                    {{ end }}
+                  </ul>
+                  {{ if gt (len $chapters) 3 }}
+                  <div class="more-chapters">
+                    <a href="{{ $book.RelPermalink }}#chapters" class="more-link">查看更多章节 <i class="fas fa-arrow-right"></i></a>
+                  </div>
+                  {{ end }}
+                {{ else }}
+                  <div class="empty-chapters">
+                    <p>暂无章节内容</p>
+                  </div>
+                {{ end }}
               </div>
             </div>
-            <div class="chapter-body">
-              {{ $chap.Content }}
-            </div>
-            <div class="chapter-footer">
-              <div class="chapter-navigation">
-                {{ if gt $i 0 }}
-                {{ $prev := index $chapters (sub $i 1) }}
-                <a href="#{{ with $prev.Params.id }}{{ . }}{{ else }}{{ $prev.File.BaseFileName }}{{ end }}" class="prev-chapter" data-chapter="{{ with $prev.Params.id }}{{ . }}{{ else }}{{ $prev.File.BaseFileName }}{{ end }}">
-                  <i class="fas fa-arrow-left"></i> 上一章：{{ $prev.Title }}
-                </a>
-                {{ end }}
-                
-                {{ if lt $i (sub (len $chapters) 1) }}
-                {{ $next := index $chapters (add $i 1) }}
-                <a href="#{{ with $next.Params.id }}{{ . }}{{ else }}{{ $next.File.BaseFileName }}{{ end }}" class="next-chapter" data-chapter="{{ with $next.Params.id }}{{ . }}{{ else }}{{ $next.File.BaseFileName }}{{ end }}">
-                  下一章：{{ $next.Title }} <i class="fas fa-arrow-right"></i>
-                </a>
-                {{ end }}
-              </div>
-            </div>
-          </article>
-          {{ end }}
-        </section>
+            {{ end }}
+          </div>
+        </div>
+        {{ else }}
+        <div class="empty-books">
+          <p>暂无书籍内容</p>
+        </div>
+        {{ end }}
       </div>
     </div>
   </main>
+
+  <style>
+    /* 书籍展示区样式 */
+    .books-showcase {
+      margin-top: 30px;
+    }
+    
+    /* 书籍布局 - 左右分栏 */
+    .books-layout {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    /* 左侧边栏 */
+    .books-sidebar {
+      flex: 0 0 250px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .books-sidebar h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #3a69c7;
+      color: #333;
+    }
+    
+    .books-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+    
+    .book-item {
+      margin-bottom: 10px;
+    }
+    
+    .book-item a {
+      display: block;
+      padding: 10px 15px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+    
+    .book-item a:hover, .book-item.active a {
+      background: #3a69c7;
+      color: white;
+    }
+    
+    .all-books-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .view-all-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #3a69c7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* 右侧内容区 */
+    .books-content {
+      flex: 1;
+    }
+    
+    .book-detail {
+      display: none;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    
+    .book-detail.active {
+      display: block;
+    }
+    
+    .book-header {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .book-cover {
+      flex: 0 0 180px;
+    }
+    
+    .book-cover img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .book-info {
+      flex: 1;
+    }
+    
+    .book-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .book-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    
+    .book-meta {
+      display: flex;
+      gap: 20px;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    .chapters-count, .date {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .book-actions {
+      margin-top: 20px;
+    }
+    
+    .book-read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #3a69c7;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    
+    .book-read-btn:hover {
+      background: #2a59b7;
+    }
+    
+    /* 章节预览 */
+    .book-chapters {
+      margin-top: 20px;
+    }
+    
+    .book-chapters h4 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .chapters-preview {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .chapter-preview-item {
+      margin-bottom: 10px;
+    }
+    
+    .chapter-link {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      background: #f9f9f9;
+      color: #333;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+    
+    .chapter-link:hover {
+      background: #f0f0f0;
+    }
+    
+    .chapter-title {
+      font-weight: bold;
+    }
+    
+    .chapter-date {
+      color: #888;
+      font-size: 14px;
+    }
+    
+    .more-chapters {
+      margin-top: 15px;
+      text-align: center;
+    }
+    
+    .more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #3a69c7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .more-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 992px) {
+      .books-layout {
+        flex-direction: column;
+      }
+      
+      .books-sidebar {
+        flex: auto;
+        width: 100%;
+      }
+      
+      .book-header {
+        flex-direction: column;
+      }
+      
+      .book-cover {
+        flex: auto;
+        max-width: 200px;
+        margin: 0 auto 20px;
+      }
+    }
+  </style>
 
   <section class="contact-section" id="contact">
     <div class="container">
@@ -153,7 +421,8 @@
           <h3>快速导航</h3>
           <ul>
             <li><a href="#about">关于作者</a></li>
-            <li><a href="#chapters">章节目录</a></li>
+            <li><a href="#chapters">书籍目录</a></li>
+            <li><a href="/books/">全部书籍</a></li>
             <li><a href="#contact">联系方式</a></li>
           </ul>
         </div>
@@ -181,15 +450,29 @@
 
   <script src="/js/main.js"></script>
   <script>
-    // 确保点击标题能返回主页
     document.addEventListener('DOMContentLoaded', function() {
-      const siteTitle = document.querySelector('.logo a');
-      if (siteTitle) {
-        siteTitle.addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = '/';
+      // 书籍导航功能
+      const bookItems = document.querySelectorAll('.book-item');
+      const bookDetails = document.querySelectorAll('.book-detail');
+      
+      bookItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const bookId = this.getAttribute('data-book-id');
+          
+          // 更新导航项状态
+          bookItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 更新内容区状态
+          bookDetails.forEach(detail => {
+            if (detail.id === `book-${bookId}`) {
+              detail.classList.add('active');
+            } else {
+              detail.classList.remove('active');
+            }
+          });
         });
-      }
+      });
     });
   </script>
 </body>

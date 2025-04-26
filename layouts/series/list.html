@@ -1,0 +1,30 @@
+{{ define "main" }}
+<div class="series-list-page">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    
+    <div class="series-intro">
+      {{ .Content }}
+    </div>
+    
+    <div class="series-grid">
+      {{ range .Site.Data.series.series }}
+      <div class="series-card">
+        <a href="{{ "series" | relURL }}/{{ .id }}" class="series-link">
+          <div class="series-thumb">
+            <img src="{{ .thumb | relURL }}" alt="{{ .title }}" onerror="this.src='{{ `/images/default-thumb.png` | relURL }}'">
+          </div>
+          <div class="series-info">
+            <h2>{{ .title }}</h2>
+            <p class="series-desc">{{ .description }}</p>
+            <div class="series-meta">
+              <span class="chapters-count"><i class="fas fa-book-open"></i> {{ len .chapters }} 章节</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }} 

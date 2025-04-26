@@ -1,8 +1,7 @@
 backend:
   name: github
-  repo: "crazyoldmanll/time-recording" # 请替换为您的GitHub用户名
+  repo: crazyoldmanll/time-recording  # 替换为你实际的GitHub用户名和仓库名
   branch: main
-  auth_scope: repo  # 请求私有仓库权限（如果是私有仓库）
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
     update: '更新 {{collection}} "{{slug}}"'
@@ -52,6 +51,24 @@ locale: 'zh_Hans'
 local_backend_cache: false
 
 collections:
+  - name: "books"
+    label: "书籍"
+    folder: "content/books"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
+      - { label: "描述", name: "description", widget: "string", required: false, hint: "书籍简短描述" }
+      - { label: "封面", name: "cover", widget: "image", required: false, hint: "书籍封面图片" }
+      - { 
+          label: "正文", 
+          name: "body", 
+          widget: "text",
+          default: "书籍介绍内容...",
+          hint: "书籍详细介绍"
+        }
+
   - name: "chapters"
     label: "章节"
     folder: "content/chapters"
@@ -60,6 +77,16 @@ collections:
     fields:
       - { label: "标题", name: "title", widget: "string" }
       - { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
+      - { 
+          label: "所属书籍", 
+          name: "book", 
+          widget: "relation",
+          collection: "books",
+          search_fields: ["title"],
+          value_field: "{{slug}}",
+          display_fields: ["title"],
+          required: true
+        }
       - { label: "章节 ID", name: "id", widget: "string", required: false, hint: "可选，用于唯一标识" }
       - { label: "缩略图", name: "thumb", widget: "image", required: false, hint: "可选，章节缩略图" }
       - { 

@@ -1,5 +1,104 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
+<div class="default-list">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    
+    <div class="page-content">
+      {{ .Content }}
+    </div>
+    
+    <div class="items-list">
+      {{ range .Pages }}
+      <div class="list-item">
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <div class="item-meta">
+          <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+        </div>
+        <div class="item-summary">
+          {{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}
+        </div>
+        <a href="{{ .RelPermalink }}" class="read-more">查看详情 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .default-list {
+    padding: 80px 0 40px;
+  }
+  
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .page-content {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #555;
+  }
+  
+  .items-list {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .list-item {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .list-item h2 {
+    margin-bottom: 10px;
+  }
+  
+  .list-item h2 a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .list-item h2 a:hover {
+    color: #3a69c7;
+  }
+  
+  .item-meta {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .item-summary {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #3a69c7;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .read-more:hover {
+    text-decoration: underline;
+  }
+</style>
 {{ end }}
 

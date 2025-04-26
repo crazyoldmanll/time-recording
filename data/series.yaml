@@ -1,0 +1,29 @@
+series:
+  - id: "daily-life"
+    title: "日常生活"
+    description: "记录平凡生活中的点点滴滴，那些看似普通却蕴含深意的日常。"
+    thumb: "/images/series/daily-life.png"
+    chapters:
+      - "intro"
+      - "chapter-3"
+      
+  - id: "love-story"
+    title: "爱情故事"
+    description: "那些关于爱与成长的故事，有笑有泪，有欢乐也有思考。"
+    thumb: "/images/series/love-story.png"
+    chapters:
+      - "2025-04-25-终于"
+      - "2025-04-25-相亲"
+
+  - id: "adventure"
+    title: "奇遇记"
+    description: "生活中那些不期而遇的冒险与挑战，每一次经历都是成长。"
+    thumb: "/images/series/adventure.png"
+    chapters:
+      - "2025-04-25-乱马的秘密"
+      
+  - id: "初中的故事"
+    title: "初中的故事"
+    description: "记录青春期最美好的回忆，那些初中时代的点点滴滴。"
+    thumb: "/images/series/初中的故事.png"
+    chapters: [] 

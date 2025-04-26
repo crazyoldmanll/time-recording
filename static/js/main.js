@@ -8,89 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const backToTopBtn = document.getElementById('back-to-top');
   const progressBar = document.querySelector('.progress-bar');
 
-  // 章节切换
-  const chapterNavItems = document.querySelectorAll('.chapter-nav li');
-  const chapterContents = document.querySelectorAll('.chapter-content');
-  const galleryLinks = document.querySelectorAll('.gallery-link');
-  const navChapterLinks = document.querySelectorAll('.prev-chapter, .next-chapter');
-
-  function showChapter(chapterId) {
-    // 隐藏所有章节
-    chapterContents.forEach(chapter => chapter.classList.remove('visible'));
-    // 取消选中状态
-    chapterNavItems.forEach(item => item.classList.remove('active'));
-
-    // 显示选中章节
-    const activeChapter = document.getElementById(chapterId);
-    if (activeChapter) {
-      activeChapter.classList.add('visible');
-      // 设置选中状态
-      const activeNavItem = document.querySelector(`.chapter-nav li[data-chapter="${chapterId}"]`);
-      if (activeNavItem) {
-        activeNavItem.classList.add('active');
-        // 确保导航项可见（在移动设备上）
-        activeNavItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      // 滚动到章节部分
-      const chaptersSection = document.getElementById('chapters');
-      if (chaptersSection) {
-        chaptersSection.scrollIntoView({ behavior: 'smooth' });
-      }
-      
-      // 重新加载评论组件
-      reloadUtterances(activeChapter);
-    }
-  }
-
-  // 重新加载Utterances评论组件
-  function reloadUtterances(container) {
-    // 查找评论容器
-    const commentsContainer = container.querySelector('#utterances-container');
-    if (!commentsContainer) return;
-    
-    // 清空现有内容
-    commentsContainer.innerHTML = '';
-    
-    // 创建新的script元素
-    const script = document.createElement('script');
-    script.src = 'https://utteranc.es/client.js';
-    script.setAttribute('repo', 'crazyoldmanll/time-recording');
-    script.setAttribute('issue-term', 'pathname');
-    script.setAttribute('label', '评论');
-    script.setAttribute('theme', 'github-light');
-    script.setAttribute('crossorigin', 'anonymous');
-    script.async = true;
-    
-    // 添加到容器
-    commentsContainer.appendChild(script);
-  }
-
-  // 为章节导航添加点击事件
-  chapterNavItems.forEach(item => {
-    item.addEventListener('click', function() {
-      const chapterId = this.getAttribute('data-chapter');
-      showChapter(chapterId);
-    });
-  });
-
-  // 为章节之间导航添加点击事件
-  navChapterLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const chapterId = this.getAttribute('data-chapter');
-      showChapter(chapterId);
-    });
-  });
-
-  // 为相册链接添加点击事件
-  galleryLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const chapterId = this.getAttribute('data-chapter');
-      showChapter(chapterId);
-    });
-  });
-
   // 阅读进度条
   function updateReadingProgress() {
     if (!progressBar) return;
@@ -147,5 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 页面加载时触发一次更新
   updateReadingProgress();
+
+  // 书籍卡片动画
+  const bookCards = document.querySelectorAll('.book-card');
+  if (bookCards.length > 0) {
+    bookCards.forEach((card, index) => {
+      // 添加淡入动画，错开展示
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 * index);
+    });
+  }
 });
 

@@ -1,0 +1,147 @@
+{{ define "main" }}
+<div class="books-list-page">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    
+    <div class="books-intro">
+      {{ .Content }}
+    </div>
+    
+    <div class="books-grid">
+      {{ $books := where .Site.Pages "Section" "books" }}
+      {{ $regularBooks := where $books "Kind" "page" }}
+      {{ range $regularBooks }}
+      <div class="book-card">
+        <a href="{{ .RelPermalink }}" class="book-link">
+          <div class="book-thumb">
+            <img src="{{ with .Params.cover }}{{ . }}{{ else }}/images/default-thumb.png{{ end }}" alt="{{ .Title }}">
+          </div>
+          <div class="book-info">
+            <h2>{{ .Title }}</h2>
+            <p class="book-desc">{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</p>
+            <div class="book-meta">
+              {{ $bookID := .File.BaseFileName }}
+              {{ $chapters := where .Site.RegularPages "Params.book" $bookID }}
+              <span class="chapters-count"><i class="fas fa-book-open"></i> {{ len $chapters }} 章节</span>
+              <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .books-list-page {
+    padding: 80px 0 40px;
+  }
+  
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .books-intro {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #555;
+  }
+  
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+  }
+  
+  .book-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  }
+  
+  .book-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .book-thumb {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .book-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .book-card:hover .book-thumb img {
+    transform: scale(1.05);
+  }
+  
+  .book-info {
+    padding: 20px;
+  }
+  
+  .book-info h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .book-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+    /* 多行文本截断 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 72px; /* 大约3行文本的高度 */
+  }
+  
+  .book-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .chapters-count, .date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  @media (max-width: 768px) {
+    .books-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .books-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{{ end }} 

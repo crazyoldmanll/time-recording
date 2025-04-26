@@ -127,6 +127,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.1/turndown.min.js"></script>
   
+  <!-- 添加本地登录支持 -->
+  <script>
+    // 启用本地后端
+    window.CMS_MANUAL_INIT = true;
+  </script>
+  
   <!-- 添加中文输入增强 -->
   <script src="/admin/chinese.js"></script>
   
@@ -203,6 +209,73 @@
       // CMS配置
       if (cmsLoaded) {
         try {
+          // 初始化CMS
+          CMS.init({
+            config: {
+              backend: {
+                name: 'git-gateway',
+                local_backend: true
+              },
+              local_backend: true,
+              publish_mode: 'editorial_workflow',
+              media_folder: "static/images/chapter-thumbs",
+              public_folder: "/images/chapter-thumbs",
+              locale: 'zh_Hans',
+              collections: [
+                {
+                  name: "books",
+                  label: "书籍",
+                  folder: "content/books",
+                  create: true,
+                  slug: "{{slug}}",
+                  fields: [
+                    { label: "标题", name: "title", widget: "string" },
+                    { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" },
+                    { label: "描述", name: "description", widget: "string", required: false, hint: "书籍简短描述" },
+                    { label: "封面", name: "cover", widget: "image", required: false, hint: "书籍封面图片" },
+                    { 
+                      label: "正文", 
+                      name: "body", 
+                      widget: "text",
+                      default: "书籍介绍内容...",
+                      hint: "书籍详细介绍"
+                    }
+                  ]
+                },
+                {
+                  name: "chapters",
+                  label: "章节",
+                  folder: "content/chapters",
+                  create: true,
+                  slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+                  fields: [
+                    { label: "标题", name: "title", widget: "string" },
+                    { label: "发布日期", name: "date", widget: "datetime", required: true, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" },
+                    { 
+                      label: "所属书籍", 
+                      name: "book", 
+                      widget: "relation",
+                      collection: "books",
+                      search_fields: ["title"],
+                      value_field: "{{slug}}",
+                      display_fields: ["title"],
+                      required: true
+                    },
+                    { label: "章节 ID", name: "id", widget: "string", required: false, hint: "可选，用于唯一标识" },
+                    { label: "缩略图", name: "thumb", widget: "image", required: false, hint: "可选，章节缩略图" },
+                    { 
+                      label: "正文", 
+                      name: "body", 
+                      widget: "text",
+                      default: "这里可以输入文章内容...",
+                      hint: "支持图文混排，可以粘贴保留格式的文本"
+                    }
+                  ]
+                }
+              ]
+            }
+          });
+
           // 设置中文语言
           if (window.zh_Hans) {
             CMS.registerLocale('zh_Hans', zh_Hans);
@@ -257,32 +330,6 @@
               return "";
             }
           });
-          
-          // 初始化CMS - 使用config.yml配置
-          CMS.init({
-            config: {
-              backend: {
-                name: "github",
-                repo: "用户名/my-autobiography",
-                branch: "main"
-              },
-              local_backend: {
-                url: "http://localhost:8081/api/v1"
-              },
-              load_config_file: true,
-              locale: 'zh_Hans',
-              editor: {
-                preview: true
-              },
-              markdown: {
-                default_mode: 'rich_text',
-                frontmatter_delimiter: ['---', '---'],
-                show_raw: true
-              }
-            }
-          });
-          
-          logDebug("CMS初始化完成");
           
           // 在初始化后额外添加中文支持
           setTimeout(function() {

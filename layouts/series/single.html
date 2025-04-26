@@ -1,0 +1,126 @@
+{{ define "main" }}
+<div class="series-page">
+  <div class="container">
+    <div class="series-header">
+      <h1 class="series-title">{{ .Title }}</h1>
+      <div class="series-meta">
+        <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+        {{ $currentSeries := .File.BaseFileName }}
+        {{ $seriesData := index (where .Site.Data.series.series "id" $currentSeries) 0 }}
+        {{ if $seriesData }}
+          <span class="chapters-count"><i class="fas fa-book"></i> {{ len $seriesData.chapters }} 个章节</span>
+        {{ else if .Params.chapters }}
+          <span class="chapters-count"><i class="fas fa-book"></i> {{ len .Params.chapters }} 个章节</span>
+        {{ else }}
+          <span class="chapters-count"><i class="fas fa-book"></i> 0 个章节</span>
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="series-description">
+      {{ .Content }}
+    </div>
+
+    <div class="chapters-list">
+      <h2>章节列表</h2>
+      {{ $currentSeries := .File.BaseFileName }}
+      {{ $seriesData := index (where .Site.Data.series.series "id" $currentSeries) 0 }}
+      {{ $chapters := where .Site.RegularPages "Section" "chapters" }}
+      
+      {{ if and $seriesData $seriesData.chapters }}
+        {{ range $seriesData.chapters }}
+          {{ $chapter_id := . }}
+          {{ range $chapters }}
+            {{ if eq .File.BaseFileName $chapter_id }}
+            <div class="chapter-item">
+              <div class="chapter-meta">
+                <h3 class="chapter-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                <div class="chapter-info">
+                  <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+                  <span class="reading-time"><i class="far fa-clock"></i> {{ div (countwords .Content) 200 }} 分钟阅读</span>
+                </div>
+              </div>
+              <div class="chapter-summary">
+                {{ if .Params.description }}
+                  {{ .Params.description }}
+                {{ else }}
+                  {{ .Summary }}
+                {{ end }}
+                <a href="{{ .RelPermalink }}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ else if .Params.chapters }}
+        {{ range .Params.chapters }}
+          {{ $chapter_id := . }}
+          {{ range $chapters }}
+            {{ if eq .File.BaseFileName $chapter_id }}
+            <div class="chapter-item">
+              <div class="chapter-meta">
+                <h3 class="chapter-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                <div class="chapter-info">
+                  <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+                  <span class="reading-time"><i class="far fa-clock"></i> {{ div (countwords .Content) 200 }} 分钟阅读</span>
+                </div>
+              </div>
+              <div class="chapter-summary">
+                {{ if .Params.description }}
+                  {{ .Params.description }}
+                {{ else }}
+                  {{ .Summary }}
+                {{ end }}
+                <a href="{{ .RelPermalink }}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ else }}
+        {{ $seriesID := .File.BaseFileName }}
+        {{ range $chapters }}
+          {{ if eq .Params.series $seriesID }}
+            <div class="chapter-item">
+              <div class="chapter-meta">
+                <h3 class="chapter-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                <div class="chapter-info">
+                  <span class="date"><i class="far fa-calendar-alt"></i> {{ .Date.Format "2006-01-02" }}</span>
+                  <span class="reading-time"><i class="far fa-clock"></i> {{ div (countwords .Content) 200 }} 分钟阅读</span>
+                </div>
+              </div>
+              <div class="chapter-summary">
+                {{ if .Params.description }}
+                  {{ .Params.description }}
+                {{ else }}
+                  {{ .Summary }}
+                {{ end }}
+                <a href="{{ .RelPermalink }}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      
+      {{ $hasChapters := false }}
+      {{ if and $seriesData $seriesData.chapters }}
+        {{ $hasChapters = true }}
+      {{ else if .Params.chapters }}
+        {{ $hasChapters = true }}
+      {{ else }}
+        {{ range $chapters }}
+          {{ if eq .Params.series $.File.BaseFileName }}
+            {{ $hasChapters = true }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      
+      {{ if not $hasChapters }}
+        <div class="empty-chapters">
+          <p>暂无章节内容</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }} 

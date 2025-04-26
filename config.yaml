@@ -6,6 +6,8 @@ module:
   mounts:
     - source: content/chapters
       target: content/chapters
+    - source: content/books
+      target: content/books
 outputs:
   home: ["HTML", "RSS"]
 # 关闭 taxonomy（用不到）
