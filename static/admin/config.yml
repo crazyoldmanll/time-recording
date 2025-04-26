@@ -1,7 +1,8 @@
 backend:
-  name: github
-  branch: main
-  repo: crazyoldmanll/time-recording
+  name: github              # 改成 github
+  repo: crazyoldmanll/time-recording   # 你的 GitHub 仓库
+  branch: main              # 你要提交到的分支
+  auth_scope: repo          # OAuth 授权范围
   commit_messages:
     create: '创建 {{collection}} "{{slug}}"'
     update: '更新 {{collection}} "{{slug}}"'
