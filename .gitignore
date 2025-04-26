@@ -3,7 +3,7 @@
 /resources/_gen/
 /assets/jsconfig.json
 hugo_stats.json
-static/admin/config.yml
+
 
 # Hugo临时文件
 .hugo_build.lock
