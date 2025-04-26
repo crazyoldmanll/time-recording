@@ -1138,32 +1138,3 @@ section {
   font-style: italic;
 }
 
-/* 修复书籍详情页面在移动设备上的水平滚动问题 */
-@media (max-width: 768px) {
-  body.section-books {
-    overflow-x: hidden;
-  }
-  
-  /* 调整书籍详情页的布局 */
-  .section-books .book-meta,
-  .section-books div[style*="display: flex; gap"] {
-    flex-wrap: wrap !important;
-  }
-  
-  .section-books div[style*="max-width: 1000px"] {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
-  
-  /* 确保章节列表正确换行 */
-  .section-books a[style*="display: flex; padding: 15px"] {
-    flex-wrap: wrap !important;
-  }
-  
-  .section-books div[style*="font-size: 14px; color: #777; display: flex"] {
-    flex-wrap: wrap !important;
-  }
-}
-
