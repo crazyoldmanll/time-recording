@@ -194,8 +194,13 @@ section {
   transition: background 0.2s;
 }
 
-.main-nav a:hover {
+.main-nav a:hover, .main-nav a.active {
   background: #f0f0f0;
+}
+
+.main-nav a.active {
+  color: var(--primary-color);
+  font-weight: bold;
 }
 
 /* ---------- 英雄区 ---------- */
@@ -717,7 +722,8 @@ body.home .contact-section {
 /* 联系页面专用样式 */
 body.contact-page .contact-section {
   display: block;
-  padding-top: 100px; /* 给顶部导航留出空间 */
+  padding-top: 120px; /* 给顶部导航留出空间 */
+  min-height: calc(100vh - 400px); /* 确保联系区域有足够的高度 */
 }
 
 .contact-content {
@@ -991,7 +997,7 @@ body.contact-page .contact-section {
   
   .author-image {
     width: 250px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1.5rem;
   }
   
   .contact-content {
@@ -1004,6 +1010,17 @@ body.contact-page .contact-section {
   body {
     padding-top: 80px; /* 减小上边距，原来是80px */
     overflow-x: hidden; /* 防止水平滚动 */
+  }
+  
+  /* 进一步减小作者图片的间距 */
+  .author-image {
+    width: 200px; /* 使图片更小 */
+    margin: 0 auto 1rem; /* 进一步减小底部边距 */
+  }
+  
+  /* 缩小关于区域的内边距 */
+  .about-section {
+    padding: 3rem 0 2rem;
   }
   
   /* 书籍详情页返回按钮调整 - 减少上方空白 */
@@ -1246,3 +1263,31 @@ body.contact-page .contact-section {
   text-align: center;
   font-size: 0.9rem;
 }
+
+/* 防止按钮和图标错位的全局规则 */
+@media (max-width: 480px) {
+  /* 全局控制，防止元素突出其容器 */
+  a, button, .social-icons a, .contact-list a, .footer-nav a {
+    position: relative !important;
+    z-index: auto !important;
+  }
+  
+  /* 确保页面底部元素正确显示 */
+  .simple-footer, .site-footer, #back-to-top {
+    position: relative !important;
+    z-index: 5 !important;
+  }
+  
+  /* 确保联系区域及其元素正常显示 */
+  .contact-section {
+    position: relative !important;
+    z-index: 5 !important;
+  }
+  
+  /* 确保固定定位的顶部菜单有最高层级 */
+  .site-header {
+    z-index: 1000 !important;
+  }
+}
+
+/* 简化版页脚样式 */

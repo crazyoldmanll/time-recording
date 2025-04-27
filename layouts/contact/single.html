@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>联系我 - {{ .Site.Title }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="contact-page">
+  <header class="site-header">
+    <div class="container">
+      <div class="logo"><a href="/">{{ .Site.Title }}</a></div>
+      <nav class="main-nav">
+        <a href="/#about"><i class="fas fa-user"></i> 关于</a>
+        <a href="/#chapters"><i class="fas fa-book-open"></i> 书籍</a>
+        <a href="/books/"><i class="fas fa-book"></i> 全部书籍</a>
+        <a href="/contact/" class="active"><i class="fas fa-envelope"></i> 联系</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title"><span>联系我</span></h2>
+      <div class="contact-content">
+        <div class="contact-info">
+          <h3>让我们保持联系</h3>
+          <p>无论是对故事的感想、建议，还是合作意向，都欢迎与我交流。</p>
+          <ul class="contact-list">
+            <li><i class="fas fa-envelope"></i> <a href="mailto:example@domain.com">example@domain.com</a></li>
+            <li><i class="fab fa-weixin"></i> <span>微信号：yourwechat</span></li>
+            <li><i class="fab fa-weibo"></i> <a href="https://weibo.com/u/yourweibo">@你的微博</a></li>
+          </ul>
+        </div>
+        <div class="contact-form">
+          <form id="contact-form" name="contact" method="POST" data-netlify="true">
+            <input type="hidden" name="form-name" value="contact">
+            <div class="form-group">
+              <label for="name">您的姓名</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">电子邮箱</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="message">留言内容</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">发送留言</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{ partial "footer.html" . }}
+
+  <div class="reading-progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <button id="back-to-top" title="返回顶部"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="/js/main.js"></script>
+</body>
+</html> 

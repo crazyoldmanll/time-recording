@@ -16,20 +16,19 @@
         <a href="#about"><i class="fas fa-user"></i> 关于</a>
         <a href="#chapters"><i class="fas fa-book-open"></i> 书籍</a>
         <a href="/books/"><i class="fas fa-book"></i> 全部书籍</a>
-        <a href="#contact"><i class="fas fa-envelope"></i> 联系</a>
+        <a href="/contact/"><i class="fas fa-envelope"></i> 联系</a>
       </nav>
     </div>
   </header>
 
   <section class="about-section" id="about">
     <div class="container">
-      <h2 class="section-title"><span>关于作者</span></h2>
       <div class="about-content">
         <div class="author-image">
           <img src="/images/author.png" alt="作者照片">
         </div>
         <div class="author-info">
-          <h3>{{ .Site.Title }}</h3>
+          <h3>作者简介</h3>
           <p>欢迎来到我的自传体小说世界。这是一个融合了真实经历与虚构故事的空间，记录了我人生旅途中的点滴记忆与感悟。</p>
           <p>每一章节都是一段独特的旅程，每一个故事都承载着特别的情感。希望我的文字能够引起你的共鸣，带给你些许感动与思考。</p>
           <div class="social-links">
@@ -282,6 +281,8 @@
       border-radius: 5px;
       font-weight: bold;
       transition: background 0.2s;
+      position: relative;
+      z-index: 5;
     }
     
     .book-read-btn:hover {
@@ -375,41 +376,6 @@
     }
   </style>
 
-  <section class="contact-section" id="contact">
-    <div class="container">
-      <h2 class="section-title"><span>联系我</span></h2>
-      <div class="contact-content">
-        <div class="contact-info">
-          <h3>让我们保持联系</h3>
-          <p>无论是对故事的感想、建议，还是合作意向，都欢迎与我交流。</p>
-          <ul class="contact-list">
-            <li><i class="fas fa-envelope"></i> <a href="mailto:example@domain.com">example@domain.com</a></li>
-            <li><i class="fab fa-weixin"></i> <span>微信号：yourwechat</span></li>
-            <li><i class="fab fa-weibo"></i> <a href="https://weibo.com/u/yourweibo">@你的微博</a></li>
-          </ul>
-        </div>
-        <div class="contact-form">
-          <form id="contact-form" name="contact" method="POST" data-netlify="true">
-            <input type="hidden" name="form-name" value="contact">
-            <div class="form-group">
-              <label for="name">您的姓名</label>
-              <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-              <label for="email">电子邮箱</label>
-              <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="message">留言内容</label>
-              <textarea id="message" name="message" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="submit-button">发送留言</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <footer class="site-footer">
     <div class="container">
       <div class="footer-content">
@@ -423,7 +389,7 @@
             <li><a href="#about">关于作者</a></li>
             <li><a href="#chapters">书籍目录</a></li>
             <li><a href="/books/">全部书籍</a></li>
-            <li><a href="#contact">联系方式</a></li>
+            <li><a href="/contact/">联系方式</a></li>
           </ul>
         </div>
         <div class="footer-social">
