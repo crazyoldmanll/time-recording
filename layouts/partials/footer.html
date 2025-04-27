@@ -1,3 +1,5 @@
+{{ if .IsHome }}
+<!-- 首页完整页脚 -->
 <footer class="site-footer">
   <div class="container">
     <div class="footer-content">
@@ -29,6 +31,16 @@
     </div>
   </div>
 </footer>
+{{ else }}
+<!-- 非首页简化版页脚 -->
+<footer class="site-footer simple-footer">
+  <div class="container">
+    <div class="footer-simple">
+      &copy; {{ now.Format "2006" }} {{ .Site.Title }}. 保留所有权利.
+    </div>
+  </div>
+</footer>
+{{ end }}
 
 <div class="reading-progress">
   <div class="progress-bar"></div>

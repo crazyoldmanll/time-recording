@@ -709,6 +709,17 @@ section {
   padding: 6rem 0;
 }
 
+/* 首页不显示联系区域 */
+body.home .contact-section {
+  display: none;
+}
+
+/* 联系页面专用样式 */
+body.contact-page .contact-section {
+  display: block;
+  padding-top: 100px; /* 给顶部导航留出空间 */
+}
+
 .contact-content {
   display: flex;
   gap: 3rem;
@@ -990,27 +1001,43 @@ section {
 
 @media (max-width: 768px) {
   /* 增加页面主体上边距，防止被 fixed header 遮挡 */
-  /* 注意：如果书籍和文章页有特定 body class 或容器 class，应使用更精确的选择器 */
   body {
-    padding-top: 80px; /* 根据实际 header 高度调整 */
-    overflow-x: hidden; /* 防止水平滚动，如果只想应用于书籍页，需更精确选择器 */
+    padding-top: 80px; /* 减小上边距，原来是80px */
+    overflow-x: hidden; /* 防止水平滚动 */
   }
   
-  /* 隐藏移动端的页脚 */
-  .site-footer {
-    display: none;
-  }
-
-  /* 解决返回按钮被遮挡问题 - 增加返回按钮的 z-index */
-  .chapter-header a, 
+  /* 书籍详情页返回按钮调整 - 减少上方空白 */
   .book-header a,
-  .back-button,
-  .return-link {
+  body.book-page .back-button,
+  body.single-book .back-button,
+  .book-detail .back-button,
+  body.book-page .return-link,
+  body.single-book .return-link,
+  .book-detail .return-link {
     position: relative;
-    z-index: 1001; /* 高于 header 的 z-index */
+    z-index: 1001;
+    margin-top: 5px; /* 减少空白 */
+    padding-top: 0;
+    display: inline-block;
   }
   
-  /* 专为书籍目录页设置，防止左右滑动 */
+  /* 章节页面的返回按钮调整 - 增加上方空白防止遮挡 */
+  .chapter-header a,
+  body.chapter-page .back-button,
+  body.chapter-page .return-link {
+    position: relative;
+    z-index: 1001;
+    margin-top: 15px; /* 增加空白，防止遮挡 */
+    padding-top: 5px;
+    display: inline-block;
+  }
+  
+  /* 强化防止左右滑动 */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
   body.book-page,
   body.single-book,
   .book-detail,
@@ -1021,8 +1048,16 @@ section {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    position: relative;
   }
 
+  /* 防止内容溢出容器 */
+  .container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
   html {
     font-size: 14px;
   }
@@ -1083,18 +1118,37 @@ section {
 }
 
 @media (max-width: 480px) {
+  /* 书籍详情页按钮调整 */
+  .book-header a,
+  body.book-page .back-button,
+  body.book-page .return-link,
+  body.single-book .back-button,
+  body.single-book .return-link,
+  .book-detail .back-button, 
+  .book-detail .return-link {
+    margin-top: 0; /* 在最小屏幕上进一步减少上方空白 */
+    padding-top: 0;
+    font-size: 0.9rem;
+  }
+  
+  /* 章节页按钮调整 */
+  .chapter-header a,
+  body.chapter-page .back-button,
+  body.chapter-page .return-link {
+    margin-top: 12px; /* 保持足够空白避免遮挡 */
+    padding-top: 3px;
+    font-size: 0.9rem;
+  }
+  
+  /* 确保没有水平滚动 */
+  body, html, .container {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   .cta-buttons {
     flex-direction: column;
     gap: 0.8rem;
-  }
-  
-  /* 确保在最小屏幕上保持返回按钮可见 */
-  .chapter-header a,
-  .book-header a,
-  .back-button,
-  .return-link {
-    margin-top: 5px;
-    display: inline-block;
   }
   
   .prev-slide, .next-slide {
@@ -1181,3 +1235,14 @@ section {
   font-style: italic;
 }
 
+/* 简化版页脚样式 */
+.simple-footer {
+  background: var(--dark-bg);
+  padding: 1.5rem 0;
+}
+
+.footer-simple {
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  font-size: 0.9rem;
+}
