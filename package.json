@@ -4,18 +4,20 @@
   "description": "个人自传体网站",
   "main": "index.js",
   "scripts": {
-    "dev": "hugo server -D",
+    "dev": "concurrently \"npm run cms\" \"npm run hugo\"",
+    "cms": "npx netlify-cms-proxy-server",
+    "hugo": "hugo server -D",
     "build": "hugo",
-    "clean": "rm -rf public",
-    "cms": "npx netlify-cms-proxy-server"
+    "clean": "rm -rf public"
   },
   "dependencies": {
     "netlify-cms-app": "^2.15.72"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "netlify-cms-proxy-server": "^1.3.24"
   },
   "engines": {
     "node": ">=18.0.0"
   }
-} 
+}

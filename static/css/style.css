@@ -989,6 +989,40 @@ section {
 }
 
 @media (max-width: 768px) {
+  /* 增加页面主体上边距，防止被 fixed header 遮挡 */
+  /* 注意：如果书籍和文章页有特定 body class 或容器 class，应使用更精确的选择器 */
+  body {
+    padding-top: 80px; /* 根据实际 header 高度调整 */
+    overflow-x: hidden; /* 防止水平滚动，如果只想应用于书籍页，需更精确选择器 */
+  }
+  
+  /* 隐藏移动端的页脚 */
+  .site-footer {
+    display: none;
+  }
+
+  /* 解决返回按钮被遮挡问题 - 增加返回按钮的 z-index */
+  .chapter-header a, 
+  .book-header a,
+  .back-button,
+  .return-link {
+    position: relative;
+    z-index: 1001; /* 高于 header 的 z-index */
+  }
+  
+  /* 专为书籍目录页设置，防止左右滑动 */
+  body.book-page,
+  body.single-book,
+  .book-detail,
+  .book-content,
+  .chapter-page,
+  .content-area {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   html {
     font-size: 14px;
   }
@@ -1052,6 +1086,15 @@ section {
   .cta-buttons {
     flex-direction: column;
     gap: 0.8rem;
+  }
+  
+  /* 确保在最小屏幕上保持返回按钮可见 */
+  .chapter-header a,
+  .book-header a,
+  .back-button,
+  .return-link {
+    margin-top: 5px;
+    display: inline-block;
   }
   
   .prev-slide, .next-slide {
