@@ -53,16 +53,6 @@
     </div>
   </div>
   
-  <!-- 书籍内容 -->
-  {{ if .Content }}
-  <div style="margin-bottom: 40px; padding: 25px; background: #f9fafb; border-radius: 8px;">
-    <h2 style="font-size: 20px; margin-bottom: 20px; color: #333;">{{ .Title }}</h2>
-    <div style="font-size: 15px; line-height: 1.7; color: #333;">
-      {{ .Content }}
-    </div>
-  </div>
-  {{ end }}
-  
   <!-- 章节列表 -->
   {{ $bookId := .File.ContentBaseName }}
   {{ $chapters := where .Site.RegularPages "Params.book" $bookId }}
