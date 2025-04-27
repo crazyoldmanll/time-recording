@@ -7,11 +7,57 @@
     </a>
   </div>
 
-  <!-- 书籍简介区块 -->
+  <!-- 恢复书籍信息区域 -->
+  <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 30px;">
+    <!-- 书籍封面 -->
+    <div style="flex: 0 0 200px; max-width: 100%;">
+      {{ if .Params.cover }}
+        <img src="{{ .Params.cover }}" alt="{{ .Title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+      {{ else }}
+        <div style="width: 100%; aspect-ratio: 2/3; background: #f0f2f5; border-radius: 8px; display: flex; justify-content: center; align-items: center;">
+          <i class="fas fa-book" style="font-size: 48px; color: #ccc;"></i>
+        </div>
+      {{ end }}
+    </div>
+    
+    <!-- 书籍信息 -->
+    <div style="flex: 1; min-width: 280px;">
+      <h1 style="font-size: 24px; margin-bottom: 15px; color: #333; line-height: 1.4;">{{ .Title }}</h1>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; color: #777; font-size: 14px;">
+        <span style="display: flex; align-items: center;">
+          <i class="far fa-calendar-alt" style="margin-right: 5px;"></i> {{ .Date.Format "2006-01-02" }}
+        </span>
+        
+        {{ $bookId := .File.ContentBaseName }}
+        {{ $chapters := where .Site.RegularPages "Params.book" $bookId }}
+        <span style="display: flex; align-items: center;">
+          <i class="fas fa-list" style="margin-right: 5px;"></i> {{ len $chapters }} 章节
+        </span>
+      </div>
+      
+      {{ if .Params.description }}
+      <div style="margin-bottom: 20px; font-size: 15px; line-height: 1.6; color: #555; max-height: 100px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+        {{ .Params.description }}
+      </div>
+      {{ end }}
+      
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        {{ if gt (len $chapters) 0 }}
+          {{ $firstChapter := index ($chapters.ByDate) 0 }}
+          <a href="{{ $firstChapter.RelPermalink }}" style="display: inline-flex; align-items: center; padding: 8px 16px; background: #3a69c7; color: white; font-weight: 500; border-radius: 6px; text-decoration: none; transition: background 0.2s; font-size: 14px;">
+            <i class="fas fa-book-open" style="margin-right: 8px;"></i> 开始阅读
+          </a>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  
+  <!-- 书籍内容 -->
   {{ if .Content }}
-  <div style="margin-bottom: 40px; padding: 30px; background: #f9fafb; border-radius: 8px;">
-    <h2 style="font-size: 24px; margin-bottom: 20px; color: #333;">{{ .Title }}</h2>
-    <div style="font-size: 16px; line-height: 1.8; color: #333;">
+  <div style="margin-bottom: 40px; padding: 25px; background: #f9fafb; border-radius: 8px;">
+    <h2 style="font-size: 20px; margin-bottom: 20px; color: #333;">{{ .Title }}</h2>
+    <div style="font-size: 15px; line-height: 1.7; color: #333;">
       {{ .Content }}
     </div>
   </div>
@@ -28,7 +74,7 @@
       <a href="{{ $chapter.RelPermalink }}" style="display: flex; padding: 15px; background: #f5f7fa; border-radius: 8px; text-decoration: none; color: inherit; transition: background 0.2s; align-items: center; justify-content: space-between;">
         <div style="flex: 1; min-width: 0;">
           <div style="font-size: 16px; font-weight: 500; color: #333; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ add $index 1 }}. {{ $chapter.Title }}</div>
-          <div style="font-size: 14px; color: #777; display: flex; gap: 15px;">
+          <div style="font-size: 14px; color: #777; display: flex; gap: 15px; flex-wrap: wrap;">
             <span style="display: flex; align-items: center;">
               <i class="far fa-calendar-alt" style="margin-right: 5px;"></i> {{ $chapter.Date.Format "2006-01-02" }}
             </span>
